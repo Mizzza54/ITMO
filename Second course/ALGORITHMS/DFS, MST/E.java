@@ -1,0 +1,180 @@
+package E;
+
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.*;
+
+/**
+ * @author Michael Gerasimov
+ * start: 14.10.2020
+ * @version -
+ */
+public class E {
+    static Graph Graph;
+    static boolean[] visited;
+    static ArrayList<Integer> ArticulationPoints = new ArrayList<>();
+    static int time = 0;
+    static int maxColor = 0;
+    static int[] tin;
+    static int[] up;
+    static int[] colors;
+
+    public static void main(String[] args) {
+        Graph = new Graph();
+        visited = new boolean[Graph.TheNumberOfVertex + 1];
+        tin = new int[Graph.TheNumberOfVertex + 1];
+        up = new int[Graph.TheNumberOfVertex + 1];
+        colors = new int[Graph.TheNumberOfEdges + 1];
+
+
+        for (int i = 1; i < Graph.TheNumberOfVertex + 1; i++) {
+            if (!visited[i]) {
+                dfs(i, -1);
+            }
+        }
+
+        /*
+        System.out.println("tin = ");
+        System.out.println(Arrays.toString(tin));
+        System.out.println("up = ");
+        System.out.println(Arrays.toString(up));
+
+         */
+
+        Arrays.fill(visited, false);
+
+        for (int i = 1; i < Graph.TheNumberOfVertex + 1; i++) {
+            if (!visited[i]) {
+                //maxColor++;
+                paint(i, 0, -1);
+                //paint(i, maxColor , -1);
+            }
+        }
+
+        System.out.println(maxColor);
+        for (int i = 1; i < colors.length; i++) {
+            System.out.print((colors[i]) + " ");
+        }
+    }
+
+    public static void paint(int v, int color, int parent) {
+        visited[v] = true;
+        for (Edge i : Graph.ListOfEdgesForEachVertex.get(v)) {
+
+            /*
+            if (i.right == parent) {
+                continue;
+            }
+             */
+
+            if (visited[i.right]) {
+
+                /*
+                if (tin[i.right] < tin[v]) {
+                    colors[i.right] = color;
+                }
+
+                 */
+
+                if (colors[i.index] == 0) {
+                    colors[i.index] = color;
+                }
+
+            }
+
+            if (!visited[i.right]) {
+                if (up[i.right] >= tin[v]) {
+                    colors[i.index] = ++maxColor;
+                    paint(i.right, maxColor, v);
+                } else {
+                    colors[i.index] = color;
+                    paint(i.right, color, v);
+                }
+            }
+        }
+    }
+
+    public static void dfs(int v, int parent) {
+        visited[v] = true;
+        time++;
+        up[v] = time;
+        tin[v] = time;
+        for (Edge i : Graph.ListOfEdgesForEachVertex.get(v)) {
+            if (i.right == parent) {
+                continue;
+            }
+            if (visited[i.right]) {
+                up[v] = Math.min(up[v], tin[i.right]);
+            }
+            if (!visited[i.right]) {
+                dfs(i.right, v);
+                up[v] = Math.min(up[v], up[i.right]);
+            }
+        }
+    }
+}
+
+class Graph {
+    FastReader scanner = new FastReader(System.in);
+
+    int TheNumberOfVertex;
+    int TheNumberOfEdges;
+    ArrayList<HashSet<Edge>> ListOfEdgesForEachVertex = new ArrayList<>();
+
+    public Graph() {
+        TheNumberOfVertex = scanner.nextInt();
+        TheNumberOfEdges = scanner.nextInt();
+        ListOfEdgesForEachVertex.add(new HashSet<>());
+
+        for (int i = 0; i < TheNumberOfVertex; i++) {
+            ListOfEdgesForEachVertex.add(new HashSet<>());
+        }
+
+        for (int i = 0; i < TheNumberOfEdges; i++) {
+            int left = scanner.nextInt();
+            int right = scanner.nextInt();
+            ListOfEdgesForEachVertex.get(left).add(new Edge(left, right, i + 1));
+            ListOfEdgesForEachVertex.get(right).add(new Edge(right, left, i + 1));
+        }
+    }
+}
+
+class Edge {
+    int index;
+    int left;
+    int right;
+
+    Edge(int left, int right, int index) {
+        this.left = left;
+        this.right = right;
+        this.index = index;
+    }
+}
+
+class FastReader {
+    BufferedReader br;
+    StringTokenizer st;
+
+    FastReader(InputStream input) {
+        br = new BufferedReader(new InputStreamReader(input));
+    }
+
+    String next() {
+        while (st == null || !st.hasMoreElements()) {
+            try {
+                st = new StringTokenizer(br.readLine());
+            } catch (Exception e) {
+                return null;
+            }
+        }
+        return st.nextToken();
+    }
+
+    int nextInt() {
+        return Integer.parseInt(next());
+    }
+}
+
+
+
