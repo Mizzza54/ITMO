@@ -1,0 +1,1 @@
+rmiregistry -J--class-path=/Users/michael/Desktop/java-advanced-2021/out/production/info.kgeorgiy.ja.gerasimov

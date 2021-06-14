@@ -1,0 +1,31 @@
+Анализируемый файл "testEnUSMoney.txt"
+Сводная статистика
+	Число предложений: 21 (21 различных).
+	Число слов: 292 (188 различных).
+	Число чисел: 2 (2 различных).
+	Число сумм: 9 (8 различных).
+	Дат в тексте нет.
+Статистика по предложениям
+	Число предложений: 21 (21 различных).
+	Минимальное предложение: "After all, people can permanently damage their eyesight from a long list of seemingly innocuous things, including glancing at a solar eclipse without proper eye protection.".
+	Максимальное предложение: "Waiting for a transplant often takes too long, and the cost of this surgery is also very prohibitive for many patients.".
+	Минимальная длина предложения: 17 ("Liver - $157,000.").
+	Минимальная длина предложения: 210 ("Even though most people are eligible to donate blood, there's still typically a big shortage of this necessary life-giving component of the human body, both for individual patients and pharmaceutical companies.").
+	Средняя длина предложения: 87,238.
+Статистика по словам
+	Число слов: 292 (188 различных).
+	Минимальное слово: "a".
+	Максимальное слово: "your".
+	Минимальная длина слова: 1 ("B").
+	Минимальная длина слова: 14 ("pharmaceutical").
+	Средняя длина слова: 4,887.
+Статистика по числам
+	Число чисел: 2 (2 различных).
+	Минимальное число: 2 015.
+	Максимальное число: 30 000.
+	Среднее число: 16 007,5.
+Статистика по суммам денег
+	Число сумм: 9 (8 различных).
+	Минимальная сумма: 1,40 ₽.
+	Максимальная сумма: 997 700,00 ₽.
+	Средняя сумма: 184 729,27 ₽.

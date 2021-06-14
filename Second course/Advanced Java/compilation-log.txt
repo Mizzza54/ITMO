@@ -1,0 +1,21 @@
+Updating repository __repos/Gerasimov_Mihail
+Already up to date.
+Compiling 11 files
+__current-repo/java-solutions/info/kgeorgiy/ja/gerasimov/arrayset/ArraySet.java:66: warning: [unchecked] unchecked cast
+            return ((Comparable<T>) o1).compareTo(o2);
+                                    ^
+  required: Comparable<T>
+  found:    T
+  where T is a type-variable:
+    T extends Object declared in class ArraySet
+__current-repo/java-solutions/info/kgeorgiy/ja/gerasimov/arrayset/ArraySet.java:283: warning: [unchecked] unchecked cast
+        return Collections.binarySearch(List, (T) o, Comparator) >= 0;
+                                                  ^
+  required: T
+  found:    Object
+  where T is a type-variable:
+    T extends Object declared in class ArraySet
+error: warnings found and -Werror specified
+1 error
+2 warnings
+ERROR: Compilation failed

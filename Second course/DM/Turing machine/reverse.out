@@ -1,0 +1,38 @@
+start: s
+accept: ac
+reject: rj
+blank: _
+
+s 0 -> set_delimiter 0 <
+s 1 -> set_delimiter 1 <
+
+set_delimiter _ -> get L >
+
+get 0 -> add_zero D <
+get 1 -> add_one D <
+get 0' -> get 0' >
+get 1' -> get 1' >
+get D -> get D >
+get L -> get L >
+get _ -> prepare_finish _ <
+
+add_zero 0' -> add_zero 0' <
+add_zero 1' -> add_zero 1' <
+add_zero D -> add_zero D <
+add_zero L -> add_zero L <
+add_zero _ -> get 0' >
+
+add_one 0' -> add_one 0' <
+add_one 1' -> add_one 1' <
+add_one D -> add_one D <
+add_one L -> add_one L <
+add_one _ -> get 1' >
+
+prepare_finish D -> prepare_finish _ <
+prepare_finish L -> prepare_finish _ <
+prepare_finish 0' -> prepare_finish 0 <
+prepare_finish 1' -> prepare_finish 1 <
+prepare_finish _ -> finish _ >
+
+finish 0 -> ac 0 ^
+finish 1 -> ac 1 ^

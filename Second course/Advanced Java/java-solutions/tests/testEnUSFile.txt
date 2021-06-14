@@ -1,0 +1,31 @@
+Анализируемый файл "testEnUSFile.txt"
+Сводная статистика
+	Число предложений: 14 (14 различных).
+	Число слов: 292 (179 различных).
+	Число чисел: 5 (5 различных).
+	Сумм в тексте нет.
+	Число дат: 2 (2 различных).
+Статистика по предложениям
+	Число предложений: 14 (14 различных).
+	Минимальное предложение: "Alan Mathison Turing was born 06/01/1912 and die 06/07/1954.".
+	Максимальное предложение: "Whilst he was a fellow at Cambridge, he published a proof demonstrating that some purely mathematical yes–no questions can never be answered by computation and defined a Turing machine, and went on to prove the halting problem for Turing machines is undecidable.".
+	Минимальная длина предложения: 60 ("Alan Mathison Turing was born 06/01/1912 and die 06/07/1954.").
+	Минимальная длина предложения: 262 ("Whilst he was a fellow at Cambridge, he published a proof demonstrating that some purely mathematical yes–no questions can never be answered by computation and defined a Turing machine, and went on to prove the halting problem for Turing machines is undecidable.").
+	Средняя длина предложения: 137,929.
+Статистика по словам
+	Число слов: 292 (179 различных).
+	Минимальное слово: "a".
+	Максимальное слово: "yes–no".
+	Минимальная длина слова: 1 ("a").
+	Минимальная длина слова: 17 ("electromechanical").
+	Средняя длина слова: 5,428.
+Статистика по числам
+	Число чисел: 5 (5 различных).
+	Минимальное число: 6.
+	Максимальное число: 1 938.
+	Среднее число: 394,4.
+Статистика по датам
+	Число дат: 2 (2 различных).
+	Минимальная дата: 1 июн. 1912 г..
+	Максимальная дата: 7 июн. 1954 г..
+	Средняя дата: 4 июн. 1933 г..

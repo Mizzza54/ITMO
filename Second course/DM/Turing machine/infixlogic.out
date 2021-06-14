@@ -1,0 +1,74 @@
+3
+
+S 0 _ _ -> next 0 ^ # > _ ^
+S 1 _ _ -> next 1 ^ # > _ ^
+S ( _ _ -> next ( ^ # > _ ^
+
+next 0 _ _ -> next _ > _ ^ 0 >
+next 1 _ _ -> next _ > _ ^ 1 >
+next o _ _ -> opStack_pop_or _ ^ _ ^ _ ^
+next a _ _ -> opStack_pop_and _ ^ _ ^ _ ^
+next _ _ _ -> opStack_pop _ ^ _ < _ ^
+next ( _ _ -> opStack_push_open _ ^ _ ^ _ ^
+next ) _ _ -> opStack_relax _ ^ _ < _ ^
+
+opStack_pop_or _ _ _ -> opStack_pop_or _ ^ _ < _ ^
+opStack_pop_or _ o _ -> opStack_pop_or _ ^ _ < o >
+opStack_pop_or _ a _ -> opStack_pop_or _ ^ _ < a >
+opStack_pop_or _ # _ -> addOp_or _ ^ # > _ ^
+opStack_pop_or _ ( _ -> addOp_or _ ^ ( > _ ^
+
+addOp_or _ _ _ -> next _ > o > _ ^
+
+opStack_pop_and _ _ _ -> opStack_pop_and _ ^ _ < _ ^
+opStack_pop_and _ o _ -> addOp_and _ ^ _ < _ ^
+opStack_pop_and _ a _ -> opStack_pop_and _ ^ _ < a >
+opStack_pop_and _ # _ -> addOp_and _ ^ # > _ ^
+opStack_pop_and _ ( _ -> addOp_and _ ^ ( > _ ^
+
+addOp_and _ _ _ -> next _ > a > _ ^
+
+opStack_pop _ o _ -> prepare_relocate _ ^ _ < o >
+opStack_pop _ a _ -> prepare_relocate _ ^ _ < a >
+opStack_pop _ # _ -> prepare_relocate _ ^ _ < _ <
+
+opStack_push_open _ _ _ -> next _ > ( > _ ^
+
+opStack_relax _ o _ -> opStack_relax _ ^ _ < o >
+opStack_relax _ a _ -> opStack_relax _ ^ _ < a >
+opStack_relax _ ( _ -> next _ > _ ^ _ ^
+
+prepare_relocate _ # _ -> prepare_relocate _ ^ _ ^ _ <
+prepare_relocate _ _ 0 -> prepare_relocate 0 < _ ^ _ <
+prepare_relocate _ _ 1 -> prepare_relocate 1 < _ ^ _ <
+prepare_relocate _ _ o -> prepare_relocate o < _ ^ _ <
+prepare_relocate _ _ a -> prepare_relocate a < _ ^ _ <
+prepare_relocate _ _ _ -> evaulate _ > _ ^ _ >
+
+
+evaulate 0 _ _ -> evaulate _ > 0 > _ ^
+evaulate 1 _ _ -> evaulate _ > 1 > _ ^
+evaulate o _ _ -> or _ ^ _ < _ ^
+evaulate a _ _ -> and _ ^ _ < _ ^
+evaulate _ _ _ -> finish _ ^ _ < _ ^
+
+or _ 0 _ -> or0 _ ^ _ < _ ^
+or _ 1 _ -> or1 _ ^ _ < _ ^
+
+or0 _ 0 _ -> evaulate _ > 0 > _ ^
+or0 _ 1 _ -> evaulate _ > 1 > _ ^
+or1 _ 0 _ -> evaulate _ > 1 > _ ^
+or1 _ 1 _ -> evaulate _ > 1 > _ ^
+
+and _ 0 _ -> and0 _ ^ _ < _ ^
+and _ 1 _ -> and1 _ ^ _ < _ ^
+
+and0 _ 0 _ -> evaulate _ > 0 > _ ^
+and0 _ 1 _ -> evaulate _ > 0 > _ ^
+and1 _ 0 _ -> evaulate _ > 0 > _ ^
+and1 _ 1 _ -> evaulate _ > 1 > _ ^
+
+finish _ 0 _ -> finish 0 ^ _ ^ _ ^
+finish _ 1 _ -> finish 1 ^ _ ^ _ ^
+finish 0 _ _ -> AC 0 ^ _ ^ _ ^
+finish 1 _ _ -> AC 1 ^ _ ^ _ ^

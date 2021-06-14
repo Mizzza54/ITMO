@@ -1,0 +1,41 @@
+start: s
+accept: ac
+reject: rj
+blank: _
+
+s 0 -> find_plus_right 0 >
+s 1 -> find_plus_right 1 >
+
+find_plus_right 0 -> find_plus_right 0 >
+find_plus_right 1 -> find_plus_right 1 >
+find_plus_right + -> low_bit_B + >
+ 
+low_bit_B 0 -> low_bit_B 0 >
+low_bit_B 1 -> low_bit_B 1 >
+low_bit_B _ -> decrement_B _ <
+
+decrement_B 0 -> decrement_B 1 <
+decrement_B 1 -> find_plus_left 0 <
+decrement_B + -> prepare_delete_B + >
+
+find_plus_left 0 -> find_plus_left 0 <
+find_plus_left 1 -> find_plus_left 1 <
+find_plus_left + -> increment_A + <
+
+increment_A 0 -> find_plus_right 1 >
+increment_A 1 -> increment_A 0 <
+increment_A + -> increment_A + <
+increment_A _ -> find_plus_right 1 >
+
+prepare_delete_B 1 -> prepare_delete_B 0 >
+prepare_delete_B _ -> delete_B _ <
+
+delete_B 0 -> delete_B _ <
+delete_B + -> prepare_finish _ <
+
+prepare_finish 0 -> prepare_finish 0 <
+prepare_finish 1 -> prepare_finish 1 <
+prepare_finish _ -> finish _ >
+
+finish 0 -> ac 0 ^
+finish 1 -> ac 1 ^

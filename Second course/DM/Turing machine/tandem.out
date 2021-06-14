@@ -1,0 +1,71 @@
+start: s
+accept: ac
+reject: rj
+blank: _
+
+s 0 -> find_end 0A >
+s 1 -> find_end 1A >
+
+find_end 0 -> find_end 0 >
+find_end 1 -> find_end 1 >
+find_end 0A -> find_end 0A >
+find_end 1A -> find_end 1A >
+find_end 0B -> find_end 0B >
+find_end 1B -> find_end 1B >
+find_end _ -> find_B _ <
+
+find_A 0 -> find_A 0 <
+find_A 1 -> find_A 1 <
+find_A 0A -> change_A 0A >
+find_A 1A -> change_A 1A >
+find_A 0B -> find_A 0B <
+find_A 1B -> find_A 1B <
+
+find_B 0 -> find_A 0B <
+find_B 1 -> find_A 1B <
+find_B 0A -> rj 0A >
+find_B 1A -> rj 1A >
+find_B 0B -> find_B 0B <
+find_B 1B -> find_B 1B <
+
+change_A 0 -> find_end 0A >
+change_A 1 -> find_end 1A >
+change_A 0B -> prepare_delete_0A 0B <
+change_A 1B -> prepare_delete_1A 1B <
+
+prepare_delete_0A 0A -> prepare_delete_0A 0A <
+prepare_delete_0A 1A -> prepare_delete_0A 1A <
+prepare_delete_0A _ -> delete_0A _ >
+prepare_delete_0A 0 -> prepare_delete_0A 0 <
+prepare_delete_0A 1 -> prepare_delete_0A 1 <
+
+prepare_delete_1A 0A -> prepare_delete_1A 0A <
+prepare_delete_1A 1A -> prepare_delete_1A 1A <
+prepare_delete_1A _ -> delete_1A _ >
+prepare_delete_1A 0 -> prepare_delete_1A 0 <
+prepare_delete_1A 1 -> prepare_delete_1A 1 <
+
+delete_0A 0A -> find_support _ >
+delete_0A 1A -> rj _ >
+
+delete_1A 0A -> rj _ >
+delete_1A 1A -> find_support _ >
+
+find_support 0 -> find_support 0 >
+find_support 1 -> find_support 1 >
+find_support 0A -> find_support 0A >
+find_support 1A -> find_support 1A >
+find_support 0B -> get_next_support 0 >
+find_support 1B -> get_next_support 1 >
+
+get_next_support 0B -> prepare_delete_0A 0B <
+get_next_support 1B -> prepare_delete_1A 1B <
+get_next_support _ -> check _ <
+
+check 0 -> check 0 <
+check 1 -> check 1 <
+check 0A -> rj 0A ^
+check 1A -> rj 1A ^
+check 0B -> rj 0B ^
+check 1B -> rj 1B ^
+check _ -> ac _ ^

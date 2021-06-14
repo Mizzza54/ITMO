@@ -1,0 +1,196 @@
+start: s
+accept: ac
+reject: rj
+blank: _
+
+s 0 -> prepare_check_C_equals_zero_or_one 0 >
+s 1 -> prepare_check_C_equals_zero_or_one 1 >
+
+prepare_check_C_equals_zero_or_one 0 -> prepare_check_C_equals_zero_or_one 0 >
+prepare_check_C_equals_zero_or_one 1 -> prepare_check_C_equals_zero_or_one 1 >
+prepare_check_C_equals_zero_or_one * -> check_C_equals_zero_or_one * >
+
+check_C_equals_zero_or_one 0 -> C_equals_zero _ <
+check_C_equals_zero_or_one 1 -> check_C_equals_one 1 >
+
+C_equals_zero 0 -> C_equals_zero _ <
+C_equals_zero 1 -> C_equals_zero _ <
+C_equals_zero * -> C_equals_zero _ <
+C_equals_zero _ -> ac 0 ^
+
+check_C_equals_one 0 -> add_separator 0 <
+check_C_equals_one 1 -> add_separator 1 <
+check_C_equals_one _ -> C_equals_one _ <
+
+C_equals_one 1 -> C_equals_one _ <
+C_equals_one * -> C_equals_one2 _ <
+
+C_equals_one2 0 -> C_equals_one2 0 <
+C_equals_one2 1 -> C_equals_one2 1 <
+C_equals_one2 _ -> ac _ >
+
+add_separator 0 -> add_separator 0 <
+add_separator 1 -> add_separator 1 <
+add_separator * -> add_separator * <
+add_separator _ -> prepare_copy_A S >
+
+prepare_copy_A 0 -> prepare_copy_A 0 >
+prepare_copy_A 1 -> prepare_copy_A 1 >
+prepare_copy_A * -> copy_A * <
+
+copy_A 0 -> copy_zero 0' <
+copy_A 1 -> copy_one 1' <
+
+copy_zero 0 -> copy_zero 0 <
+copy_zero 1 -> copy_zero 1 <
+copy_zero S -> copy_zero S <
+copy_zero _ -> prepare_next_copy_A 0 >
+copy_zero D -> prepare_next_copy_A 0 >
+
+copy_one 0 -> copy_one 0 <
+copy_one 1 -> copy_one 1 <
+copy_one S -> copy_one S <
+copy_one _ -> prepare_next_copy_A 1 >
+copy_one D -> prepare_next_copy_A 1 >
+
+prepare_next_copy_A 0 -> prepare_next_copy_A 0 >
+prepare_next_copy_A 1 -> prepare_next_copy_A 1 >
+prepare_next_copy_A S -> next_copy_A S >
+
+next_copy_A 0 -> next_copy_A 0 >
+next_copy_A 1 -> next_copy_A 1 >
+next_copy_A 0' -> next_copy_A_take 0' <
+next_copy_A 1' -> next_copy_A_take 1' <
+
+next_copy_A_take 0 -> copy_zero 0' <
+next_copy_A_take 1 -> copy_one 1' <
+next_copy_A_take S -> add_plus S <
+
+add_plus 0 -> add_plus 0 <
+add_plus 1 -> add_plus 1 <
+add_plus _ -> prepare_copy_A2 + >
+add_plus + -> prepare_normalize_A2 + >
+
+prepare_copy_A2 0 -> prepare_copy_A2 0 >
+prepare_copy_A2 1 -> prepare_copy_A2 1 >
+prepare_copy_A2 S -> next_copy_A2 S >
+
+next_copy_A2 0' -> next_copy_A2 0' >
+next_copy_A2 1' -> next_copy_A2 1' >
+next_copy_A2 0'' -> copy_A2 0' <
+next_copy_A2 1'' -> copy_A2 1' <
+next_copy_A2 * -> copy_A2 * <
+
+copy_A2 0' -> copy_zero2 0'' <
+copy_A2 1' -> copy_one2 1'' <
+copy_A2 S -> normalize_A S >
+
+copy_zero2 0 -> copy_zero2 0 <
+copy_zero2 1 -> copy_zero2 1 <
+copy_zero2 0' -> copy_zero2 0' <
+copy_zero2 1' -> copy_zero2 1' <
+copy_zero2 S -> copy_zero2 S <
+copy_zero2 + -> copy_zero2 + <
+copy_zero2 _ -> prepare_next_copy_A2 0 >
+
+copy_one2 0 -> copy_one2 0 <
+copy_one2 1 -> copy_one2 1 <
+copy_one2 0' -> copy_one2 0' <
+copy_one2 1' -> copy_one2 1' <
+copy_one2 S -> copy_one2 S <
+copy_one2 + -> copy_one2 + <
+copy_one2 _ -> prepare_next_copy_A2 1 >
+
+prepare_next_copy_A2 0 -> prepare_next_copy_A2 0 >
+prepare_next_copy_A2 1 -> prepare_next_copy_A2 1 >
+prepare_next_copy_A2 S -> prepare_next_copy_A2 S >
+prepare_next_copy_A2 + -> prepare_next_copy_A2 + >
+prepare_next_copy_A2 0' -> prepare_next_copy_A2 0' >
+prepare_next_copy_A2 1' -> prepare_next_copy_A2 1' >
+prepare_next_copy_A2 0'' -> copy_A2 0'' <
+prepare_next_copy_A2 1'' -> copy_A2 1'' <
+
+normalize_A 0'' -> normalize_A 0 >
+normalize_A 1'' -> normalize_A 1 >
+normalize_A * -> low_bit_C2 * >
+
+find_mul_right 0' -> find_mul_right 0' >
+find_mul_right 1' -> find_mul_right 1' >
+find_mul_right * -> low_bit_C * >
+
+low_bit_C 0 -> low_bit_C 0 >
+low_bit_C 1 -> low_bit_C 1 >
+low_bit_C _ -> decrement_C _ <
+
+low_bit_C2 0 -> low_bit_C2 0 >
+low_bit_C2 1 -> low_bit_C2 1 >
+low_bit_C2 _ -> decrement_C2 _ <
+
+decrement_C2 0 -> decrement_C2 1 <
+decrement_C2 1 -> find_mul_left2 0 <
+decrement_C2 * -> rj _ ^
+
+find_mul_left2 0 -> find_mul_left2 0 <
+find_mul_left2 1 -> find_mul_left2 1 <
+find_mul_left2 * -> low_bit_C * >
+
+decrement_C 0 -> decrement_C 1 <
+decrement_C 1 -> find_mul_left 0 <
+decrement_C * -> prepare_delete_all * >
+
+prepare_delete_all 1 -> prepare_delete_all 1 >
+prepare_delete_all _ -> delete_all _ <
+
+delete_all 0 -> delete_all _ <
+delete_all 1 -> delete_all _ <
+delete_all S -> delete_all _ <
+delete_all * -> delete_all _ <
+delete_all + -> finish _ <
+
+finish 0 -> finish 0 <
+finish 1 -> finish 1 <
+finish _ -> ac _ >
+
+find_mul_left 0 -> find_mul_left 0 <
+find_mul_left 1 -> find_mul_left 1 <
+find_mul_left * -> prepare_evaluate * <
+
+prepare_evaluate 0 -> prepare_evaluate 0 <
+prepare_evaluate 1 -> prepare_evaluate 1 <
+prepare_evaluate 0' -> prepare_evaluate 0' <
+prepare_evaluate 1' -> prepare_evaluate 1' <
+prepare_evaluate S -> prepare_evaluate S <
+prepare_evaluate + -> prepare_evaluate + <
+prepare_evaluate _ -> find_plus_right _ >
+
+find_plus_right 0 -> find_plus_right 0 >
+find_plus_right 1 -> find_plus_right 1 >
+find_plus_right + -> low_bit_B + >
+ 
+low_bit_B 0 -> low_bit_B 0 >
+low_bit_B 1 -> low_bit_B 1 >
+low_bit_B S -> decrement_B S <
+
+decrement_B 0 -> decrement_B 1 <
+decrement_B 1 -> find_plus_left 0 <
+decrement_B + -> prepare_delete_B + >
+
+find_plus_left 0 -> find_plus_left 0 <
+find_plus_left 1 -> find_plus_left 1 <
+find_plus_left + -> increment_A + <
+
+increment_A 0 -> find_plus_right 1 >
+increment_A 1 -> increment_A 0 <
+increment_A + -> increment_A + <
+increment_A _ -> find_plus_right 1 >
+
+prepare_delete_B 1 -> prepare_delete_B D >
+prepare_delete_B S -> prepare_copy_A S >
+
+prepare_normalize_A2 0 -> prepare_normalize_A2 0 >
+prepare_normalize_A2 1 -> prepare_normalize_A2 1 >
+prepare_normalize_A2 S -> normalize_A2 S >
+
+normalize_A2 0' -> normalize_A2 0 >
+normalize_A2 1' -> normalize_A2 1 >
+normalize_A2 * -> find_mul_right * ^

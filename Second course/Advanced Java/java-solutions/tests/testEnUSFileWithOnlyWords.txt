@@ -1,0 +1,21 @@
+Анализируемый файл "testEnUSFileWithOnlyWords.txt"
+Сводная статистика
+	Число предложений: 4 (4 различных).
+	Число слов: 50 (43 различных).
+	Чисел в тексте нет.
+	Сумм в тексте нет.
+	Дат в тексте нет.
+Статистика по предложениям
+	Число предложений: 4 (4 различных).
+	Минимальное предложение: "I'm sorry but you lose - Georgiy Korneev.".
+	Максимальное предложение: "Java is C++ without the guns, clubs and knives - James Gosling.".
+	Минимальная длина предложения: 41 ("I'm sorry but you lose - Georgiy Korneev.").
+	Минимальная длина предложения: 106 ("If Java had true garbage collection, most programs would delete themselves upon execution - Robert Sewell.").
+	Средняя длина предложения: 76,75.
+Статистика по словам
+	Число слов: 50 (43 различных).
+	Минимальное слово: "a".
+	Максимальное слово: "you".
+	Минимальная длина слова: 1 ("C").
+	Минимальная длина слова: 11 ("development").
+	Средняя длина слова: 4,88.

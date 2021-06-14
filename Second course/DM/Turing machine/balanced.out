@@ -1,0 +1,23 @@
+start: s
+accept: ac
+reject: rj
+blank: _
+
+s ( -> find_right ( >
+s ) -> rj _ ^
+s _ -> ac _ ^
+
+find_right ( -> find_right ( >
+find_right ) -> find_left D <
+find_right _ -> check_all _ <
+find_right D -> find_right D >
+
+find_left ( -> find_right D >
+find_left ) -> rj _ ^
+find_left _ -> rj _ ^
+find_left D -> find_left D <
+
+check_all D -> check_all D <
+check_all ( -> rj _ ^
+check_all ) -> rj _ ^
+check_all _ -> ac _ ^

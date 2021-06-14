@@ -1,0 +1,95 @@
+start: s
+accept: ac
+reject: rj
+blank: _
+
+s 0 -> normalizeA 0' >
+s 1 -> normalizeA 1' >
+
+normalizeA 0 -> normalizeA 0' >
+normalizeA 1 -> normalizeA 1' >
+normalizeA < -> normalizeB < >
+
+normalizeB 0 -> normalizeB 0'' >
+normalizeB 1 -> normalizeB 1'' >
+normalizeB _ -> normalize_find _ <
+
+normalize_find 0'' -> normalize_start_zero 0 <
+normalize_find 1'' -> normalize_start_one 1 <
+normalize_find 0 -> normalize_find 0 <
+normalize_find 1 -> normalize_find 1 <
+normalize_find < -> prepare_check_equals < <
+
+normalize_start_zero 0'' -> normalize_start_zero 0'' <
+normalize_start_zero 1'' -> normalize_start_zero 1'' <
+normalize_start_zero < -> normalize_start_zero < <
+normalize_start_zero 0' -> normalize_end 0E >
+normalize_start_zero 1' -> normalize_end 1 >
+normalize_start_zero 0 -> normalize_start_zero 0 <
+normalize_start_zero 1 -> normalize_start_zero 1 <
+normalize_start_zero _ -> ac _ ^
+normalize_start_zero 0E -> normalize_start_zero 0E <
+normalize_start_zero 1E -> normalize_start_zero 1E <
+
+normalize_start_one 0'' -> normalize_start_one 0'' <
+normalize_start_one 1'' -> normalize_start_one 1'' <
+normalize_start_one < -> normalize_start_one < <
+normalize_start_one 0' -> normalize_end 0 >
+normalize_start_one 1' -> normalize_end 1E >
+normalize_start_one 0 -> normalize_start_one 0 <
+normalize_start_one 1 -> normalize_start_one 1 <
+normalize_start_one _ -> ac _ ^
+normalize_start_one 0E -> normalize_start_one 0E <
+normalize_start_one 1E -> normalize_start_one 1E <
+ 
+normalize_end 0 -> normalize_end 0 >
+normalize_end 1 -> normalize_end 1 >
+normalize_end < -> normalize_end < >
+normalize_end 0'' -> normalize_end 0'' >
+normalize_end 1'' -> normalize_end 1'' >
+normalize_end _ -> normalize_find _ <
+normalize_end 0E -> normalize_end 0E >
+normalize_end 1E -> normalize_end 1E >
+
+prepare_check_equals 0E -> prepare_check_equals 0 <
+prepare_check_equals 1E -> prepare_check_equals 1 <
+prepare_check_equals 0 -> not_equals 0 <
+prepare_check_equals 1 -> not_equals 1 <
+prepare_check_equals _ -> rj _ ^
+
+not_equals 0 -> not_equals 0 <
+not_equals 1 -> not_equals 1 <
+not_equals 0E -> not_equals 0 <
+not_equals 1E -> not_equals 1 <
+not_equals _ -> find_sign_right _ >
+
+find_sign_right 0 -> find_sign_right 0 >
+find_sign_right 1 -> find_sign_right 1 >
+find_sign_right < -> find_B < >
+
+find_B 0 -> find_A0 D <
+find_B 1 -> find_A1 D <
+find_B D -> find_B D >
+find_B _ -> ac _ ^
+
+find_A0 D -> find_A0 D <
+find_A0 < -> find_A0 < <
+find_A0 0 -> find_A0 0 <
+find_A0 1 -> find_A0 1 <
+find_A0 _ -> check_A0 _ >
+find_A0 0' -> rj _ ^
+find_A0 1' -> rj _ ^
+
+check_A0 0 -> find_sign_right _ >
+check_A0 1 -> rj 1 ^
+
+find_A1 D -> find_A1 D <
+find_A1 < -> find_A1 < <
+find_A1 0 -> find_A1 0 <
+find_A1 1 -> find_A1 1 <
+find_A1 _ -> check_A1 _ >
+find_A1 0' -> rj _ ^
+find_A1 1' -> rj _ ^
+
+check_A1 0 -> ac 0 ^
+check_A1 1 -> find_sign_right _ >
