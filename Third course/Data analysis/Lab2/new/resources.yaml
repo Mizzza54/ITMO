@@ -1,0 +1,23 @@
+path:
+  raw:
+    surveydata: ./data/raw/surveydata_ML_external_data.csv
+
+questions:
+  1: 1. Are you using external data sources for the training of Machine Learning models?
+  2: 2. Are you currently working for a company that deploys Machine Learning in any organizational unit?
+  3: 3. Are you working with Machine Learning outside of a company?
+  4: 4. Can the models you are training be used in a specific industrial or organizational context?
+  8: 8. How many people are employed at the company you are working at?
+  11: 11. What is your job title?
+  13: 13. Are you choosing external data according to selection criteria?
+  15: 15. How are you choosing your external data sources?
+  16: 16. Do you know whether your models are trained on structured or unstructured data or even a mix between the two?
+  17: 17. Please estimate the distribution between structured and unstructured data sources you are using for the training of Machine Learning models
+  18: 18. Are there certain file formats that you prefer or refrain from using?
+  19: 19. Which file formats do you prefer?
+  20: 20. Which file formats do you refrain from using?
+  25: 25. Do you know whether you are training models based on traditional Machine Learning or Deep Learning?
+  26: 26. Which model complexity do you use most often?
+  28: 28. Which learning technique do you use most often?
+  29: 29. Which external sources for data are you currently using to train Machine Learning models?
+  30: 30. This is the last question before the end of the questionnaire. Are you sure you are done and want to submit the survey?

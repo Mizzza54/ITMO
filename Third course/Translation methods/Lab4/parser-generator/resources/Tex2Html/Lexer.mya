@@ -1,0 +1,38 @@
+{
+module GeneratedTex2Html.Lexer
+  ( Token (..)
+  , tokenize
+  ) where
+
+}
+
+%lexername { lexer }
+%tokenname { Token }
+
+{                           { const TokenOpenCurlyBrace }
+}                           { const TokenCloseCurlyBrace }
+\\$                         { const TokenDollar }
+\\^                         { const TokenCircumflexus }
+_                           { const TokenUnderline }
+[a-zA-Z0-9=+*-/]1           { TokenWord }
+
+{
+data Token
+  = TokenBackslash
+  | TokenOpenCurlyBrace
+  | TokenCloseCurlyBrace
+  | TokenDollar
+  | TokenCircumflexus
+  | TokenUnderline
+  | TokenWord String
+  | TokenEOF
+  | TokenWhiteSpace
+  | TokenEndInput
+  | Epsilon
+  deriving (Eq, Show)
+
+tokenize :: String -> [Token]
+tokenize str = case run (lexer <* pcEof) str of
+  Success r            -> r
+  Error (ErrorAtPos e) -> error $ show e
+}

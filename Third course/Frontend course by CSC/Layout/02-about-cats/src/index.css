@@ -1,0 +1,287 @@
+body {
+  min-width: 1500px;
+  margin: 0;
+}
+
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+
+  z-index: 1000;
+
+  width: 100%;
+
+  border-bottom: red solid 5px;
+
+  background-color: wheat;
+
+  font-family: 'PT SansNarrow', serif;
+  font-size: 32px;
+  text-align: center;
+}
+
+.header .title:first-letter {
+  color: red;
+}
+
+.icon-image {
+  width: 50px;
+  height: 50px;
+}
+
+.footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+
+  z-index: 1000;
+
+  width: 100%;
+
+  border-top: red solid 5px;
+
+  background-color: wheat;
+
+  font-family: 'Arial', serif;
+  font-size: 14px;
+}
+
+.footer-left {
+  float: left;
+
+  padding: 0 20px;
+}
+
+.footer-right {
+  float: right;
+
+  padding: 60px 20px;
+}
+
+.footer-link:link {
+  color: #4c4cd8;
+}
+
+main {
+  height: 500px;
+  padding-top: 250px;
+}
+
+input {
+  display: none;
+}
+
+.carousel {
+  overflow: hidden;
+
+  white-space: nowrap;
+}
+
+.cat-common {
+  position: relative;
+
+  display: inline-block;
+
+  width: 30%;
+  height: 300px;
+
+  transition-duration: 1s;
+
+  text-align: center;
+}
+
+.image {
+  height: 80%;
+
+  opacity: 0.7;
+  vertical-align: middle;
+}
+
+.preview {
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  display: none;
+
+  width: 100%;
+  height: 100%;
+
+  opacity: 0;
+  text-align: center;
+}
+
+a {
+  text-decoration: none;
+}
+
+.image-link {
+  position: relative;
+  z-index: 1000;
+
+  display: block;
+
+  width: 100%;
+  height: 100%;
+
+  text-align: center;
+}
+
+.preview-title {
+  position: absolute;
+  top: 50%;
+  z-index: 1000;
+
+  width: 100%;
+
+  margin: 0 0;
+
+  color: white;
+}
+
+.image-full .image {
+  width: 680px;
+  height: 420px;
+}
+
+.cat-1:checked ~ .carousel .cat-common {
+  left: 35%;
+}
+
+.cat-2:checked ~ .carousel .cat-common {
+  left: 5%;
+}
+
+.cat-3:checked ~ .carousel .cat-common {
+  left: -25%;
+}
+
+.cat-4:checked ~ .carousel .cat-common {
+  left: -55%;
+}
+
+.cat-5:checked ~ .carousel .cat-common {
+  left: -85%;
+}
+
+.cat-1:checked ~ .carousel .cat-common:nth-child(1) .image,
+.cat-2:checked ~ .carousel .cat-common:nth-child(2) .image,
+.cat-3:checked ~ .carousel .cat-common:nth-child(3) .image,
+.cat-4:checked ~ .carousel .cat-common:nth-child(4) .image,
+.cat-5:checked ~ .carousel .cat-common:nth-child(5) .image {
+  width: 100%;
+  height: 100%;
+
+  box-shadow: 1px 1px 4px #666;
+  opacity: 1;
+}
+
+.cat-1:checked ~ .carousel .cat-common:nth-child(1) .preview,
+.cat-2:checked ~ .carousel .cat-common:nth-child(2) .preview,
+.cat-3:checked ~ .carousel .cat-common:nth-child(3) .preview,
+.cat-4:checked ~ .carousel .cat-common:nth-child(4) .preview,
+.cat-5:checked ~ .carousel .cat-common:nth-child(5) .preview {
+  display: block;
+}
+
+.cat-1:checked ~ .carousel .cat-common:nth-child(1) .preview:hover,
+.cat-2:checked ~ .carousel .cat-common:nth-child(2) .preview:hover,
+.cat-3:checked ~ .carousel .cat-common:nth-child(3) .preview:hover,
+.cat-4:checked ~ .carousel .cat-common:nth-child(4) .preview:hover,
+.cat-5:checked ~ .carousel .cat-common:nth-child(5) .preview:hover {
+  background-color: rgba(0, 0, 0, 0.4);
+  opacity: 1;
+}
+
+.full-info {
+  position: absolute;
+  top: 25%;
+  left: 10%;
+  z-index: 3000;
+
+  display: none;
+
+  color: wheat;
+}
+
+.full-info:target {
+  display: block;
+}
+
+.image-and-text-full {
+  width: 1500px;
+  height: auto;
+}
+
+.image-full {
+  float: left;
+}
+
+.text-full {
+  float: left;
+
+  width: 600px;
+  padding: 0 20px;
+}
+
+.close-full {
+  display: inline-block;
+
+  margin: 10px;
+}
+
+.close-inner {
+  float: right;
+
+  color: wheat;
+  font-size: 32px;
+}
+
+.black {
+  display: none;
+
+  overflow: hidden;
+}
+
+.full-info:target ~ .black {
+  position: absolute;
+  top: 0;
+  z-index: 2000;
+
+  display: block;
+
+  width: 100%;
+  height: 100%;
+
+  background-color: rgba(0, 0, 0, 0.9);
+}
+
+.slider-dot-control {
+  position: relative;
+  bottom: 0;
+
+  width: 100%;
+
+  text-align: center;
+}
+
+.slider-dot-control label {
+  display: inline-block;
+
+  width: 10px;
+  height: 10px;
+
+  border-radius: 50px;
+
+  background: #bbb;
+  cursor: pointer;
+}
+
+.cat-1:checked ~ .carousel .slider-dot-control label:nth-child(1),
+.cat-2:checked ~ .carousel .slider-dot-control label:nth-child(2),
+.cat-3:checked ~ .carousel .slider-dot-control label:nth-child(3),
+.cat-4:checked ~ .carousel .slider-dot-control label:nth-child(4),
+.cat-5:checked ~ .carousel .slider-dot-control label:nth-child(5) {
+  background: black;
+}

@@ -1,0 +1,43 @@
+name:                happy-alex
+version:             0.1.0.0
+github:              "Github username here/happy-alex"
+license:             BSD3
+author:              "Michael Gerasimov"
+maintainer:          "gerasimov.misha2001@gmail.com"
+copyright:           "2019 Michael Gerasimov"
+
+extra-source-files:
+- README.md
+
+# Metadata used when publishing your package
+# synopsis:            Short description of your package
+# category:            App category here
+
+# To avoid duplicated efforts in documentation and dealing with the
+# complications of embedding Haddock markup inside cabal files, it is
+# common to point users to the README.md file.
+description:         Please see the README on GitHub at <https://github.com/Github username here/happy-alex#readme>
+
+dependencies:
+- base >= 4.7 && < 5
+- array
+- mtl
+
+library:
+  source-dirs: src
+
+tests:
+  happy-alex-test:
+    main:                Spec.hs
+    source-dirs:         test
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - happy-alex
+    - tasty-hspec
+    - tasty-hedgehog
+    - tasty
+    - hspec
+    - hedgehog

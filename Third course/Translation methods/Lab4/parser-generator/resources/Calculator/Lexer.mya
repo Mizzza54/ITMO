@@ -1,0 +1,39 @@
+{
+module GeneratedCalculator.Lexer
+  ( Token (..)
+  , tokenize
+  ) where
+
+}
+
+%lexername { lexer }
+%tokenname { Token }
+
+[0-9]+          { TokenNum . read }
+\\+             { const TokenSum }
+-               { const TokenSub }
+\\*             { const TokenMul }
+/               { const TokenDiv }
+\\(             { const TokenOB }
+\\)             { const TokenCB }
+[ \t\r\n]+      { const TokenSP }
+
+{
+data Token
+ = TokenSum
+ | TokenSub
+ | TokenMul
+ | TokenDiv
+ | TokenOB
+ | TokenCB
+ | TokenSP
+ | TokenNum Double
+ | TokenEndInput
+ | Epsilon
+ deriving (Show, Eq)
+
+tokenize :: String -> [Token]
+tokenize str = case run (lexer <* pcEof) str of
+  Success r            -> r
+  Error (ErrorAtPos e) -> error $ show e
+}

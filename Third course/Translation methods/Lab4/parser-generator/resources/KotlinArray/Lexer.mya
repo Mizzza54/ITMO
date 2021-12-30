@@ -1,0 +1,65 @@
+{
+module GeneratedKotlinArray.Lexer
+  ( Token (..)
+  , tokenize
+  ) where
+
+}
+
+%lexername { lexer }
+%tokenname { Token }
+
+var                   { const VAR }
+Array                 { const ARRAY }
+<                     { const OPEN_CHEVRONS }
+>                     { const CLOSE_CHEVRONS }
+;                     { const SEMICOLON }
+:                     { const COLON }
+,                     { const COMMA }
+[a-zA-Z0-9]+          { WORD }
+
+{
+data Token
+  = VAR
+  | WORD String
+  | ARRAY
+  | OPEN_CHEVRONS
+  | CLOSE_CHEVRONS
+  | COLON
+  | SEMICOLON
+  | COMMA
+  | TokenEndInput
+  | Epsilon
+
+tokenize :: String -> [Token]
+tokenize str = case run (lexer <* pcEof) str of
+  Success r            -> r
+  Error (ErrorAtPos e) -> error $ show e
+
+
+
+
+
+instance Eq Token where
+  VAR == VAR                       = True
+  (WORD x) == (WORD y)             = x == y
+  ARRAY == ARRAY                   = True
+  OPEN_CHEVRONS == OPEN_CHEVRONS   = True
+  CLOSE_CHEVRONS == CLOSE_CHEVRONS = True
+  SEMICOLON == SEMICOLON           = True
+  COLON == COLON                   = True
+  COMMA == COMMA                   = True
+  Epsilon == Epsilon               = True
+  _ == _                           = False
+
+instance Show Token where
+  show VAR            = "VAR"
+  show (WORD a)       = "WORD " ++ "\\\"" ++ a ++ "\\\""
+  show ARRAY          = "ARRAY"
+  show OPEN_CHEVRONS  = "OPEN_CHEVRONS"
+  show CLOSE_CHEVRONS = "CLOSE_CHEVRONS"
+  show SEMICOLON      = "SEMICOLON"
+  show COLON          = "COLON"
+  show COMMA          = "COMMA"
+  show Epsilon        = "Epsilon"
+}

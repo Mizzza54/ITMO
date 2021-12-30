@@ -1,0 +1,142 @@
+{
+module GeneratedTex2Html.Parser (evaluate) where
+
+import GeneratedTex2Html.Lexer (Token(..), tokenize)
+}
+
+
+%attributetype { AttributeData }
+%attribute res { Expressions }
+
+%name { parser }
+
+%token
+
+'{'        { TokenOpenCurlyBrace }              % a0 %
+'}'        { TokenCloseCurlyBrace }             % a0 %
+'$'        { TokenDollar }                      % a0 %
+'^'        { TokenCircumflexus }                % a0 %
+'_'        { TokenUnderline }                   % a0 %
+WORD       { TokenWord _ }                      % token2word a1 %
+
+%%
+
+%rules
+
+Start       :      | Expressions                          % $0 :: Attributes $ Expressions a1 %
+
+Expressions :      | Expression Expressions               % $0 :: (a1 : a2) %
+                   |                                      % $0 :: [] %
+
+Expression  :      | '$' FormulaList '$'                  % $0 :: ExpressionFormula a2 %
+
+FormulaList :      | Formula FormulaList                  % $0 :: a1 : a2 %
+                   |                                      % $0 :: [] %
+
+Formula     :      | Data SubAndSup                       % $0 :: Formula a1 (fst a2) (snd a2) %
+
+Data        :      | SimpleWord                           % $0 :: SimpleWord a1 %
+
+SimpleWord  :      | WORD                                 % $0 :: a1 %
+
+SubAndSup   :      | Sub NextSub                          % $0 :: (a1, a2) %
+                   | Sup NextSup                          % $0 :: (a2, a1) %
+                   |                                      % $0 :: (Nothing, Nothing) %
+
+NextSub     :      | Sup                                  % $0 :: a1 %
+                   |                                      % $0 :: Nothing %
+
+NextSup     :      | Sub                                  % $0 :: a1 %
+                   |                                      % $0 :: Nothing %
+
+Sub         :      | '_' Content                          % $0 :: Just (Formulas a2) %
+
+Sup         :      | '^' Content                          % $0 :: Just (Formulas a2) %
+
+Content     :      | '{' FormulaList '}'                  % $0 :: a2 %
+                   | Data                                 % $0 :: [(Formula a1 Nothing Nothing)] %
+
+%%
+
+
+{
+token2word :: Token -> String
+token2word (TokenWord x) = x
+
+evaluateTokens :: [Token] -> Except ParseError Expressions
+evaluateTokens = parser (Attributes $ Expressions [])
+
+evaluate :: String -> Expressions
+evaluate str = case evaluateTokens . tokenize $ str of
+  Success r -> r
+  Error e -> error $ show e
+
+
+
+
+newtype Expressions = Expressions [Expression]
+
+newtype Expression = ExpressionFormula [Formula]
+
+data Formula = Formula Data (Maybe Formulas) (Maybe Formulas)
+
+newtype Formulas = Formulas [Formula]
+
+data Data
+  = SimpleChar String
+  | SimpleWord String
+  | Complex String [Expression]
+
+instance Show Expressions where
+  show (Expressions array) = unlines $ map show array
+
+instance Show Expression where
+  show (ExpressionFormula array) = "<math>\n" ++ showFormulas array ++ "</math>" where
+    showFormulas = foldl join ""
+    join b a = b ++ show a ++ "\n"
+
+instance Show Formula where
+  show (Formula body Nothing Nothing)
+    =  "<mo>"
+    ++ show body
+    ++ "</mo>"
+  show (Formula body Nothing (Just sup))
+    =  "<msup>"
+    ++ "<mo>"
+    ++ show body
+    ++ "</mo>"
+    ++ "<mn>"
+    ++ show sup
+    ++ "</mn>"
+    ++ "</msup>"
+  show (Formula body (Just sub) Nothing)
+    =  "<msub>"
+    ++ "<mo>"
+    ++ show body
+    ++ "</mo>"
+    ++ "<mn>"
+    ++ show sub
+    ++ "</mn>"
+    ++ "</msub>"
+  show (Formula body (Just sub) (Just sup))
+    =  "<msubsup>"
+    ++ "<mo>"
+    ++ show body
+    ++ "</mo>"
+    ++ "<mn>"
+    ++ show sub
+    ++ "</mn>"
+    ++ "<mi>"
+    ++ show sup
+    ++ "</mi>"
+    ++ "</msubsup>"
+
+instance Show Formulas where
+  show (Formulas array) = unlines $ map show array
+
+instance Show Data where
+  show (SimpleChar ch)     = ch
+  show (SimpleWord word)   = word
+  show (Complex str exprs) = "Complex ????"
+
+}

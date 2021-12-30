@@ -1,0 +1,51 @@
+{
+module GeneratedKotlinArray.Parser (evaluate, Tree (..)) where
+
+import GeneratedKotlinArray.Lexer (Token(..), tokenize)
+}
+
+%attributetype { Data }
+%attribute res { Tree }
+
+%name { parser }
+
+%token
+       V       { VAR }                         % a1 %
+       A       { ARRAY }                       % a1 %
+       OC      { OPEN_CHEVRONS }               % a1 %
+       CC      { CLOSE_CHEVRONS }              % a1 %
+       Semi    { SEMICOLON }                   % a1 %
+       Col     { COLON }                       % a1 %
+       W       { WORD _ }                      % a1 %
+%%
+
+%rules
+
+D  :   | V W Col A OC T CC Semi         % $0 ::  Attributes $ Node "D" [Leaf a1, Leaf a2, Leaf a3, Leaf a4, Leaf a5, a6, Leaf a7, Leaf a8] %
+
+T  :   | W                              % $0 :: Node "T" [Leaf a1] %
+       | A OC T CC                      % $0 :: Node "T" [Leaf a1, Leaf a2, a3, Leaf a4] %
+
+%%
+
+
+{
+token2word :: Token -> String
+token2word (WORD x) = x
+
+evaluateTokens = parser VAR
+
+evaluate :: String -> Except ParseError Tree
+evaluate = evaluateTokens . tokenize
+
+
+
+
+
+data Tree = Node String [Tree] | Leaf Token deriving (Show, Eq)
+
+isWord :: Token -> Bool
+isWord t = case t of
+  WORD _ -> True
+  _ -> False
+}

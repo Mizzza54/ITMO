@@ -1,0 +1,135 @@
+body {
+  margin: 0;
+  padding: 50px 50px;
+}
+
+.cat-item {
+  display: inline-block;
+
+  width: 500px;
+  height: 630px;
+
+  margin: 50px 20px;
+
+  border: 4px solid #111111;
+  border-radius: 8px;
+
+  background: aqua;
+
+  vertical-align: middle;
+}
+
+.cat-image {
+  display: block;
+
+  width: 400px;
+  height: 350px;
+  margin-right: auto;
+
+  margin-left: auto;
+
+  /*padding: 10px 10px;*/
+
+  border: 4px solid #ddd;
+  border-radius: 8px;
+}
+
+.cat-header {
+  overflow: hidden;
+
+  width: fit-content;
+  max-width: 500px;
+  padding-left: 10px;
+
+  color: coral;
+  font-size: 32px;
+
+  text-overflow: ellipsis;
+}
+
+.cat-full-description,
+.cat-description {
+  overflow: hidden;
+
+  width: fit-content;
+
+  padding-left: 10px;
+
+  font-size: 20px;
+}
+
+.cat-status {
+  font-size: 20px;
+  font-style: italic;
+  text-align: center;
+}
+
+.cat-description li {
+  list-style-type: none;
+}
+
+.cat-description ul {
+  margin-left: 0;
+  padding-left: 0;
+}
+
+.image-section {
+  padding-top: 10px;
+}
+
+.cat-header:hover {
+  color: pink;
+}
+
+.cat-item:hover {
+  background-color: goldenrod;
+}
+
+.cat-image:hover {
+  opacity: 0.3;
+}
+
+.cat-full-description:hover,
+.cat-description:hover {
+  color: gold;
+}
+
+.header {
+  border-bottom: red solid 5px;
+
+  font-size: 32px;
+}
+
+.button-section {
+  display: block;
+
+  padding-top: 80px;
+
+  font-size: 26px;
+  text-align: center;
+}
+
+.button:checked ~ .cat-item .description-section .cat-description {
+  display: none;
+}
+
+.button:not(:checked) ~ .cat-item .full-description-section .cat-full-description {
+  display: none;
+}
+
+.button:checked ~ .cat-item {
+  display: block;
+}
+
+.button:not(:checked) ~ .cat-item {
+  display: inline-block;
+}
+
+.cat-ref {
+  text-decoration: none;
+}
+
+.icon-image {
+  width: 50px;
+  height: 50px;
+}

@@ -1,0 +1,179 @@
+package stack;
+
+import kotlinx.atomicfu.AtomicArray;
+import kotlinx.atomicfu.AtomicRef;
+
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+
+public class StackImpl implements Stack {
+    private static class Node {
+        final AtomicRef<Node> next;
+        final int x;
+
+        Node(int x, Node next) {
+            this.next = new AtomicRef<>(next);
+            this.x = x;
+        }
+    }
+
+    private final AtomicRef<Node> head = new AtomicRef<>(null);
+    private static final int CAPACITY = Runtime.getRuntime().availableProcessors() * 2;
+    private static final long TIMEOUT_IN_NANOSECONDS = 2000;
+    EliminationArray eliminationArray = new EliminationArray(CAPACITY, TIMEOUT_IN_NANOSECONDS);
+
+    @Override
+    public int pop() {
+        try {
+            Integer value = eliminationArray.visit(null, CAPACITY);
+            if (value != null) {
+                return value;
+            } else {
+                throw new TimeoutException();
+            }
+        } catch (TimeoutException e) {
+            while (true) {  // CAS loop
+                Node oldHead = head.getValue();
+                if (oldHead == null) {
+                    return Integer.MIN_VALUE;
+                }
+                if (head.compareAndSet(oldHead, oldHead.next.getValue())) {
+                    return oldHead.x;
+                }
+            }
+        }
+    }
+
+    @Override
+    public void push(int x) {
+        try {
+            Integer value = eliminationArray.visit(x, CAPACITY);  // Пробуем ждать pop
+            if (value != null) {                                  // Если value == null, значит поменялись значениями с pop
+                throw new TimeoutException();                     // Закончилось время, делаем обычный push
+            }
+        } catch (TimeoutException e) {
+            Node newHead;
+            while (true) {  // CAS loop
+                Node oldHead = head.getValue();
+                newHead = new Node(x, oldHead);
+                if (head.compareAndSet(oldHead, newHead)) {
+                    return;
+                }
+            }
+        }
+    }
+}
+
+class LockFreeExchanger {
+    private static final byte EMPTY = 0;
+    private static final byte VALUE = 1;
+    private static final byte DONE = 2;
+    private final AtomicRef<Pair> slot = new AtomicRef<>(new Pair(EMPTY, null));
+    private static final Pair EMPTY_PAIR = new Pair(EMPTY, null);
+
+    public Integer exchange(final Integer value, final long timeout, final TimeUnit unit) throws TimeoutException {
+        long timeBound = System.nanoTime() + unit.toNanos(timeout);
+
+        while (System.nanoTime() < timeBound) {
+            Pair valueOfSLot = slot.getValue();
+
+            switch (valueOfSLot.getState()) {
+                case EMPTY:                                                    // Если слот пустой, занимаем его и ждем.
+                    Pair newValueOfSlot = new Pair(VALUE, value);
+
+                    if (slot.compareAndSet(valueOfSLot, newValueOfSlot)) {     // Если выбранный слот не изменился (остался пустым),
+                        while (System.nanoTime() < timeBound) {                // то меняем значение слота на переданное и ждем pop.
+                            valueOfSLot = slot.getValue();
+                            if (valueOfSLot.getState().equals(DONE)) {        // Периодически проверяем не пришел ли pop.
+                                slot.setValue(EMPTY_PAIR);                     // Если пришел, то меняем значение слота на EMPTY
+                                return valueOfSLot.getValue();                 // и возвращаем значения слота для pop.
+                            }
+                        }                                                      // Вышли из цикла если не дождались pop.
+
+                        if (slot.compareAndSet(newValueOfSlot, EMPTY_PAIR)) {  // Пока выходили из цикла, мог прийти pop/push, поэтому надо проверить.
+                            throw new TimeoutException();                      // Если pop/push не пришел - значит не дождались, кидаем TimeoutException.
+                        } else {
+                            valueOfSLot = slot.getValue();                     // Пока выходили значение в слоте поменялось,
+                            slot.setValue(EMPTY_PAIR);                         // значит пришел либо pop, либо push.
+                            return valueOfSLot.getValue();                     // Обменялись значениями с pop/push.
+                        }
+                    }
+                    break;
+                case VALUE:                                                              // Если слот кем-то занят, то надо обменяться значениями.
+                    if (slot.compareAndSet(valueOfSLot, new Pair(DONE, value))) {        // Проверяем что состояние слота не изменилось.
+                        return valueOfSLot.getValue();                                   // Если да, то обмениваемся значениями, и присваиваем состояние DONE
+                    }                                                                    // чтобы другой Exchanger знал, что его поменяли.
+                    break;
+                case DONE:                                                               // Если DONE, то значит надо ничего не делать/менять ячейку
+                    break;
+            }
+        }
+        throw new TimeoutException();
+    }
+
+    public AtomicRef<Pair> getSlot() {
+        return slot;
+    }
+}
+
+class Pair {
+    private final Byte state;
+    private final Integer value;
+
+    public Pair(Byte state, Integer value) {
+        this.state = state;
+        this.value = value;
+    }
+
+    public Byte getState() {
+        return state;
+    }
+
+    public Integer getValue() {
+        return value;
+    }
+}
+
+class EliminationArray {
+    private final static TimeUnit TIME_UNIT = TimeUnit.NANOSECONDS;
+    private final long timeoutInNanoseconds;
+    private final AtomicArray<LockFreeExchanger> exchanger;
+    private final int size;
+    private static final byte EMPTY = 0;
+    private static final byte VALUE = 1;
+
+
+    public EliminationArray(final int capacity, final long timeoutInNanoseconds) {
+        size = capacity;
+        this.timeoutInNanoseconds = timeoutInNanoseconds;
+        exchanger = new AtomicArray<>(size);
+        for (int i = 0; i < size; i++) {
+            exchanger.get(i).setValue(new LockFreeExchanger());
+        }
+    }
+
+    public Integer visit(Integer value, int range) throws TimeoutException {
+        int index = ThreadLocalRandom.current().nextInt(range);
+        long timeBound = System.nanoTime() + TIME_UNIT.toNanos(timeoutInNanoseconds);
+        if (value == null) {
+            while (System.nanoTime() < timeBound) {
+                if (exchanger.get(index).getValue().getSlot().getValue().getState().equals(VALUE)) {
+                    return exchanger.get(index).getValue().exchange(value, timeoutInNanoseconds, TIME_UNIT);
+                } else {
+                    index = (index + 1) % size;
+                }
+            }
+            throw new TimeoutException();
+        } else {
+            while (System.nanoTime() < timeBound) {
+                if (exchanger.get(index).getValue().getSlot().getValue().getState().equals(EMPTY)) {
+                    return exchanger.get(index).getValue().exchange(value, timeoutInNanoseconds, TIME_UNIT);
+                } else {
+                    index = (index + 1) % size;
+                }
+            }
+        }
+        throw new TimeoutException();
+    }
+}

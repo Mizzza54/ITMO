@@ -1,0 +1,545 @@
+body {
+  display: grid;
+  grid-template:
+    'topbar topbar topbar topbar topbar aside' auto
+    '. body-top body-top body-top . aside' auto
+    'ya-logo search-field search-field search-field . aside' auto
+    '. ad ad ad . aside' auto
+    '. widget1 widget1 widget1 . aside' auto
+    '. widget2 widget2 widget2 . aside' auto / 12% 24% 24% 24% 110px 12%;
+
+  font-family: 'Yandex Sans', Helvetica, sans-serif;
+}
+
+.topbar {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  grid-area: topbar;
+
+  width: 100%;
+}
+
+.topbar__location {
+  display: flex;
+  flex-direction: row;
+
+  margin-left: 16px;
+
+  font-size: 14px;
+}
+
+.topbar__location_current {
+  margin-top: 0;
+  margin-left: 4px;
+}
+
+.topbar__settings {
+  margin-top: 4px;
+  margin-right: 16px;
+
+  font-size: 14px;
+}
+
+.topbar__settings_text {
+  margin-top: 4px;
+
+  cursor: pointer;
+}
+
+.geo-icon {
+  display: block;
+
+  width: 16px;
+  height: 16px;
+
+  filter: contrast(0.02);
+}
+
+.weather-icon,
+.yellow-icon {
+  width: 32px;
+  height: 32px;
+}
+
+.aside {
+  display: block;
+  grid-area: aside;
+
+  width: 100%;
+  margin-left: auto;
+}
+
+.login {
+  height: 50px;
+  margin-top: 4px;
+  padding: 8px;
+
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.5);
+  font-size: 14px;
+}
+
+.user-login {
+  margin-top: 0;
+}
+
+.ya-text::first-letter {
+  color: red;
+}
+
+.ya-link {
+  color: #0054b9;
+  text-decoration: none;
+}
+
+.visited-link {
+  color: #0d44a0;
+}
+
+.body-top {
+  display: flex;
+  flex-direction: row;
+  grid-area: body-top;
+
+  width: 100%;
+}
+
+.body-top__left-section {
+  display: flex;
+  flex-direction: column;
+
+  width: 70%;
+
+  /* justify-content: space-between; */
+}
+
+.body-top__left-section__header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.header-tab {
+  margin-right: 16px;
+
+  color: #0054b9;
+  text-decoration: none;
+}
+
+.header-tab_big {
+  font-size: 20px;
+}
+
+.small-text {
+  font-size: 14px;
+}
+
+.news-item {
+  margin-bottom: 6px;
+}
+
+.body-top__left-section__list {
+  margin-top: 4px;
+  padding-left: 0;
+
+  font-size: 16px;
+}
+
+.body-top__left-section__footer {
+  display: flex;
+  flex-direction: row;
+
+  margin-top: auto;
+}
+
+.body-top__left-section__footer__currency {
+  display: flex;
+  flex-direction: row;
+
+  margin-right: 16px;
+}
+
+.currency-item {
+  margin-top: 0;
+  margin-right: 8px;
+}
+
+.body-top__right-section {
+  width: 40%;
+}
+
+.discount-name {
+  display: block;
+
+  margin-bottom: 0;
+  margin-left: 64px;
+
+  color: #0054b9;
+  font-size: 20px;
+  text-decoration: none;
+}
+
+.discount-img {
+  margin-left: 64px;
+}
+
+.ya-market {
+  margin-top: 0;
+  margin-left: 64px;
+
+  font-size: 14px;
+}
+
+.ya-logo {
+  grid-area: ya-logo;
+
+  width: 100%;
+
+  background: gray;
+}
+
+.time-tab {
+  margin-top: 18px;
+}
+
+.search-field {
+  grid-area: search-field;
+}
+
+.search-categories {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+
+  width: 65%;
+}
+
+.search-category {
+  margin-bottom: 4px;
+
+  color: #0054b9;
+  text-decoration: none;
+}
+
+.dark-text {
+  margin-top: 4px;
+
+  color: black;
+}
+
+.gray-text {
+  color: #999;
+}
+
+.bold-text {
+  font-weight: bold;
+}
+
+.search-query-example {
+  margin-left: 6px;
+}
+
+.search-query-example-cont {
+  margin-top: 4px;
+}
+
+.search-input {
+  box-sizing: border-box;
+  width: 95%;
+  height: 100%;
+
+  border: 2px solid #ffdb4d;
+}
+
+.search-input:focus {
+  outline: none;
+}
+
+.input-wrapper {
+  display: flex;
+  flex-direction: row;
+
+  height: 36px;
+}
+
+.find-btn {
+  height: 100%;
+}
+
+.mic-btn {
+  position: relative;
+  right: 150px;
+
+  width: 24px;
+  height: 24px;
+  margin-top: 6px;
+
+  filter: contrast(0.02);
+}
+
+.keyboard-btn {
+  position: relative;
+  right: 145px;
+
+  width: 24px;
+  height: 24px;
+  margin-top: 6px;
+
+  filter: contrast(0.02);
+}
+
+.search-example {
+  display: flex;
+  flex-direction: row;
+}
+
+.ad-wrapper {
+  grid-area: ad;
+
+  box-sizing: border-box;
+  width: 90%;
+
+  border: 2px solid black;
+}
+
+.ad-img {
+  width: 100%;
+}
+
+.widgets1,
+.widgets2 {
+  display: flex;
+  flex-direction: row;
+
+  width: 100%;
+
+  margin: 32px 32px;
+}
+
+.widgets1 {
+  grid-area: widget1;
+}
+
+.widgets2 {
+  grid-area: widget2;
+}
+
+.joke-widget-wrapper,
+.widget-TV,
+.widget-car,
+.refresh-jokes-label,
+.widget-playbill,
+.widget-visited,
+.widget-location-info {
+  display: none;
+}
+
+.widget {
+  width: 40%;
+}
+
+.widget__title {
+  margin-bottom: 4px;
+
+  font-size: 20px;
+}
+
+.widget__list {
+  margin-top: 0;
+  padding-left: 0;
+
+  font-size: 14px;
+  list-style-type: none;
+}
+
+.widget__list-item {
+  margin-top: 8px;
+}
+
+.widget-car__list {
+  overflow: scroll;
+
+  height: 195px;
+}
+
+::-webkit-scrollbar {
+  width: 0;
+
+  background: transparent;
+}
+
+.shadow {
+  height: 1px;
+
+  border: 1px solid transparent;
+}
+
+.shadow-top {
+  position: relative;
+
+  box-shadow: 0 5px 5px rgba(0, 0, 0, 0.5);
+}
+
+.shadow-bottom {
+  position: relative;
+  bottom: 30px;
+  z-index: 1;
+
+  box-shadow: 0 -5px 5px rgba(0, 0, 0, 0.5);
+}
+
+.settings-popup {
+  position: absolute;
+  top: 5%;
+  left: 77%;
+
+  display: none;
+
+  width: 200px;
+  padding: 2px;
+
+  background: white;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.settings-popup__item {
+  margin-top: 10px;
+  margin-left: 20px;
+}
+
+.settings-checkbox {
+  position: absolute;
+  left: 77%;
+  z-index: 2;
+
+  display: none;
+}
+
+.jokes-checkbox {
+  top: 6%;
+}
+
+.tv-checkbox {
+  top: 8.9%;
+}
+
+.car-checkbox {
+  top: 11.8%;
+}
+
+.info-checkbox {
+  top: 16.4%;
+}
+
+.visit-checkbox {
+  top: 19.1%;
+}
+
+.playbill-checkbox {
+  top: 22.1%;
+}
+
+.show-settings-checkbox {
+  display: none;
+}
+
+.show-settings-checkbox:checked ~ .settings-popup,
+.show-settings-checkbox:checked ~ .settings-checkbox {
+  display: block;
+}
+
+.tv-checkbox:checked ~ .widgets1 .widget-TV {
+  display: block;
+}
+
+.car-checkbox:checked ~ .widgets2 .widget-car {
+  display: block;
+}
+
+.visit-checkbox:checked ~ .widgets1 .widget-visited {
+  display: block;
+}
+
+.playbill-checkbox:checked ~ .widgets2 .widget-playbill {
+  display: block;
+}
+
+.info-checkbox:checked ~ .widgets1 .widget-location-info {
+  display: block;
+}
+
+.refresh-jokes {
+  display: flex;
+  flex-direction: row;
+  align-content: center;
+}
+
+.refresh-jokes-label {
+  display: block;
+
+  cursor: pointer;
+}
+
+.refresh-jokes__refresh-img {
+  width: 16px;
+  height: 16px;
+}
+
+.refresh-jokes__text {
+  display: inline-block;
+
+  margin-left: 4px;
+}
+
+.jokes-widget-2 {
+  display: none;
+}
+
+.refresh-jokes-checkbox {
+  display: none;
+}
+
+.refresh-jokes-checkbox:checked ~ .widgets2 .jokes-widget-1 {
+  display: none;
+}
+
+.refresh-jokes-checkbox:checked ~ .widgets2 .jokes-widget-2 {
+  display: block;
+}
+
+.jokes-checkbox:checked ~ .widgets2 .joke-widget-wrapper {
+  display: block;
+}
+
+.jokes-checkbox:checked ~ .refresh-jokes-label {
+  display: block;
+}
+
+.refresh-jokes-label1,
+.refresh-jokes-label2,
+.refresh-jokes-label3,
+.refresh-jokes-label4,
+.refresh-jokes-label5,
+.joke-text-1,
+.joke-text-2,
+.joke-text-3,
+.joke-text-4,
+.joke-text-5 {
+  display: none;
+}
+
+#refresh-jokes-checkbox1:checked ~ .jokes-widget-1 .joke-text-1,
+#refresh-jokes-checkbox2:checked ~ .jokes-widget-1 .joke-text-2,
+#refresh-jokes-checkbox3:checked ~ .jokes-widget-1 .joke-text-3,
+#refresh-jokes-checkbox4:checked ~ .jokes-widget-1 .joke-text-4,
+#refresh-jokes-checkbox5:checked ~ .jokes-widget-1 .joke-text-5 {
+  display: block;
+}
+
+#refresh-jokes-checkbox1:checked ~ .jokes-refresh-container .refresh-jokes-label2,
+#refresh-jokes-checkbox2:checked ~ .jokes-refresh-container .refresh-jokes-label3,
+#refresh-jokes-checkbox3:checked ~ .jokes-refresh-container .refresh-jokes-label4,
+#refresh-jokes-checkbox4:checked ~ .jokes-refresh-container .refresh-jokes-label5,
+#refresh-jokes-checkbox5:checked ~ .jokes-refresh-container .refresh-jokes-label1 {
+  display: block;
+}

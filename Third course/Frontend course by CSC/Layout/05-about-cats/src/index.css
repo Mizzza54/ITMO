@@ -1,0 +1,148 @@
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+main {
+  display: flex;
+  justify-content: center;
+
+  width: 60%;
+  min-width: 500px;
+  height: 30%;
+  min-height: 500px;
+  margin-top: 150px;
+
+  padding: 20px;
+
+  border: gray 1px solid;
+
+  border-radius: 12px;
+
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+
+  font-family: 'PT Sans', sans-serif;
+}
+
+.content {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+
+  font-size: 22px;
+}
+
+.image-cat {
+  align-self: center;
+  justify-self: center;
+
+  width: 300px;
+  height: 300px;
+
+  padding-top: 50px;
+}
+
+.title {
+  color: rgb(68, 68, 68);
+  font-size: 32px;
+}
+
+.text {
+  padding-bottom: 10px;
+
+  color: rgb(140, 140, 150);
+}
+
+.input-age,
+.input-weight {
+  width: 35px;
+
+  background: rgb(236, 240, 244);
+}
+
+.form-age,
+.form-weight {
+  display: inline-block;
+}
+
+.form-mode {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+
+  padding: 15px;
+}
+
+.radio {
+  display: none;
+}
+
+.label-radio {
+  height: 100%;
+
+  padding: 4px;
+
+  background-color: rgb(236, 240, 244);
+}
+
+.radio:checked ~ .label-radio {
+  background-color: rgb(252, 235, 169);
+}
+
+.input-email {
+  width: 70%;
+  height: 22px;
+
+  background: rgb(236, 240, 244);
+
+  font-size: 22px;
+}
+
+.form-checkbox {
+  padding-top: 20px;
+
+  color: rgb(180, 180, 180);
+  font-size: 22px;
+}
+
+.form-button {
+  align-self: center;
+  justify-content: center;
+
+  width: 80%;
+
+  padding-top: 20px;
+}
+
+.button {
+  width: 100%;
+  height: 50px;
+
+  background: rgb(250, 220, 100);
+  font-size: 26px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+}
+
+.close-button {
+  display: none;
+}
+
+.close-button-label:hover {
+  color: red;
+}
+
+.close {
+  text-align: right;
+}
+
+.second-part {
+  display: flex;
+  flex-direction: column;
+
+  background: rgb(250, 200, 70);
+}

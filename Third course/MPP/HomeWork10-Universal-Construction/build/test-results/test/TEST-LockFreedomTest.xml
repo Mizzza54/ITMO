@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="LockFreedomTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2021-12-13T12:52:27" hostname="MacBook-Pro-3.local" time="3.621">
+  <properties/>
+  <testcase name="testLockFreedom" classname="LockFreedomTest" time="3.621"/>
+  <system-out><![CDATA[=== LockFreedomTest
+--- 0: Performed 0 operations
+--- 1: Performed 1925965 operations (pause/resumes 121)
+--- 2: Performed 3871488 operations (pause/resumes 122)
+--- 3: Performed 6011908 operations (pause/resumes 123)
+------ Done with 6013358 operations (pause/resumes 125)
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

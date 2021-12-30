@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8">
+    <title>05-about-cats</title>
+    <link rel="stylesheet" href="./index.css">
+  </head>
+  <body>
+    <main>
+      <section class='content'>
+        <section class='form'>
+
+          <h1 class='title'>Прокачай кота!</h1>
+
+          <section class='text'>
+            <div>Подпишись на рассылку нашего тренера и получи индивидуальную подобранную программу тренировок для своего кота</div>
+          </section>
+
+          <section class='from-age-and-weight'>
+            <section class='form-age'>
+              <label class='label-age' for='input-age'>
+                Кот
+                <input id='input-age' class='input-age' min='1' type='number' placeholder='1'>
+                лет и
+              </label>
+            </section>
+
+            <section class='form-weight'>
+              <label class='label-weight' for='input-weight'>
+                <input id='input-weight' class='input-weight' min='1' type='number' placeholder='1'>
+                кг
+              </label>
+            </section>
+          </section>
+
+          <section class='form-mode'>
+            <section class='form-mode-radio'>
+              <input class='radio' type='radio' name='radio' id='weight-gain'>
+              <label class='label-radio' for='weight-gain'>Набор массы</label>
+            </section>
+
+            <section class='form-mode-radio'>
+              <input class='radio' type='radio' name='radio' id='weight-loss'>
+              <label class='label-radio' for='weight-loss'>Похудение</label>
+            </section>
+
+            <section class='form-mode-radio'>
+              <input class='radio' type='radio' name='radio' id='weight-hz'>
+              <label class='label-radio' for='weight-hz'>Не знаю</label>
+            </section>
+          </section>
+
+          <section class='form-email'>
+            <input class='input-email' id='input-email' type='email' placeholder='Email(ваш)'>
+          </section>
+
+          <section class='form-checkbox'>
+            <input class='checkbox' type='checkbox' id='checkbox' checked=''>
+            <label class='label-checkbox' for='checkbox'>Хочу спам</label>
+          </section>
+
+          <section class='form-button'>
+            <button class='button'>Подписаться</button>
+          </section>
+
+        </section>
+
+        <div class='second-part'>
+          <section class='close'>
+            <input class='close-button' id='close-button' type='button'>
+            <label class='close-button-label' for='close-button'>&#10007;</label>
+          </section>
+          <img class='image-cat' src='images/cat.jpeg' alt='Изображение толстого кота, лежащего на белом ковре. У кота белая шерсть на животе, на спине и голове оранжевая шерсть.'>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

@@ -1,0 +1,61 @@
+{
+module GeneratedCalculator.Parser (evaluate) where
+
+import GeneratedCalculator.Lexer (Token(..), tokenize)
+}
+
+
+%attributetype { Data }
+%attribute res { Double }
+%attribute acc { Double }
+
+%name { parser }
+
+
+%token
+       '+'      { TokenSum }  % a0 %
+       '-'      { TokenSub }  % a0 %
+       '*'      { TokenMul }  % a0 %
+       '/'      { TokenDiv }  % a0 %
+       '('      { TokenOB }   % a0 %
+       ')'      { TokenCB }   % a0 %
+       const    { TokenNum _} % Attributes { _res = (token2num a1) } %
+%%
+
+%rules
+E :   | T ET 	    	     % $0 :: Attributes { _res = _res a2 };
+                               $2 :: Attributes { _acc = _res a1 } %
+
+ET :  |  '+' T ET	   	     % $0 :: Attributes { _res = _res a3 };
+                               $3 :: Attributes { _acc = _acc a0 + _res a2 } %
+      | '-' T ET	         % $0 :: Attributes { _res = _res a3 };
+                               $3 :: Attributes { _acc = _acc a0 - _res a2 } %
+      | 			         % $0 :: Attributes { _res = _acc a0 } %
+
+T :  |  F TP	             % $0 :: Attributes { _res = _res a2 };
+                               $2 :: Attributes { _acc = _res a1 } %
+
+TP : |  '*' F TP	         % $0 :: Attributes { _res = _res a3 };
+                               $3 :: Attributes { _acc = _acc a0 * _res a2 } %
+     | '/' F TP	             % $0 :: Attributes { _res = _res a3 };
+                               $3 :: Attributes { _acc = _acc a0 / _res a2 } %
+     |  			         % $0 :: Attributes { _res = _acc a0 } %
+
+F :  |  const		         % $0 :: Attributes { _res = _res a1 } %
+	 | '(' E ')'             % $0 :: Attributes { _res = _res a2 } %
+
+
+%%
+
+
+{
+token2num :: Token -> Double
+token2num (TokenNum x) = x
+
+evaluateTokens :: [Token] -> Except ParseError Double
+evaluateTokens = parser (Attributes 0 0)
+
+evaluate :: String -> Except ParseError Double
+evaluate = evaluateTokens . tokenize
+
+}

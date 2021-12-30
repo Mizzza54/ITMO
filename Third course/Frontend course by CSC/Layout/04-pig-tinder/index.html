@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>04-pig-tinder</title>
+    <link rel="stylesheet" href="./index.css" />
+  </head>
+
+<body>
+
+  <header>
+    <h1>PigTinder</h1>
+  </header>
+
+  <main>
+    <div class="card" id="card">
+      <img class="image" id="card-image" src="image/masha.jpg" alt="Photos from PigTinder"/>
+      <div class="description">
+        <h1 class="name" id="card-name">name</h1>
+        <p class="age" id="card-age">age</p>
+      </div>
+    </div>
+
+
+    <article class="buttons">
+      <button class="button dislike" onclick="onAction()">
+        <img class="image-button" src="icons/close.png" alt="Image of dislike button"/>
+      </button>
+
+      <button class="button superlike" onclick="onAction()">
+        <img class="image-button" src="icons/star.png" alt="Image of superlike button"/>
+      </button>
+
+      <button class="button like" onclick="onAction()">
+        <img class="image-button" src="icons/plus.png" alt="Image of like button"/>
+      </button>
+    </article>
+  </main>
+
+  <script src="index.js"></script>
+</body>
+
+</html>

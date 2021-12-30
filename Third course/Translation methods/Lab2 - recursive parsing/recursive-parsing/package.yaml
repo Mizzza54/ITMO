@@ -1,0 +1,44 @@
+name:                recursive-parsing
+version:             0.1.0.0
+github:              "Mizzza54/recursive-parsing"
+license:             BSD3
+author:              "Michael Gerasimov"
+maintainer:          "gerasimov.misha2001@gmail.com"
+copyright:           "2021 Michael Gerasimov"
+
+extra-source-files:
+- README.md
+
+# Metadata used when publishing your package
+# synopsis:            Short description of your package
+# category:            Web
+
+# To avoid duplicated efforts in documentation and dealing with the
+# complications of embedding Haddock markup inside cabal files, it is
+# common to point users to the README.md file.
+description:         Please see the README on GitHub at <https://github.com/Mizzza54/recursive-parsing#readme>
+
+dependencies:
+- base >= 4.7 && < 5
+- mtl
+- process
+
+library:
+  source-dirs: src
+
+tests:
+  recursive-parsing-test:
+    main:                Spec.hs
+    source-dirs:         test
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - recursive-parsing
+    - tasty-hspec
+    - tasty-hedgehog
+    - tasty
+    - hspec
+    - hedgehog
+    - containers

@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang='ru'>
+<head>
+  <meta charset='utf-8'>
+  <title>02-about-cats</title>
+  <link rel='stylesheet' href='./index.css'>
+</head>
+
+<body>
+
+<header class='header'>
+  <img class='icon-image' alt='Иконка сайта, на иконке изображена собака' src='image/icon.png'>
+  <h1 class='title'>Cats</h1>
+</header>
+
+<main>
+  <input         type='radio' id='cat-id-1' class='cat-1' name='radio'>
+  <input         type='radio' id='cat-id-2' class='cat-2' name='radio'>
+  <input checked type='radio' id='cat-id-3' class='cat-3' name='radio'>
+  <input         type='radio' id='cat-id-4' class='cat-4' name='radio'>
+  <input         type='radio' id='cat-id-5' class='cat-5' name='radio'>
+
+
+  <section class='carousel'>
+
+    <article class='cat-common'>
+
+      <label class='image-label' for='cat-id-1'>
+        <img class='image' src='image/cat1.jpg' alt='Бенгальский кот, мальчик, 2 года'>
+      </label>
+
+      <section class='preview'>
+        <h2 class='preview-title'>Кот номер 1</h2>
+        <a class='image-link' href='#info-1'></a>
+      </section>
+
+    </article>
+
+    <article  class='cat-common'>
+
+      <label class='image-label' for='cat-id-2'>
+        <img class='image' src='image/cat2.jpeg' alt='Сиамская кошка, девочка, 4 года'>
+      </label>
+
+      <section class='preview'>
+        <h2 class='preview-title'>Кот номер 2</h2>
+        <a class='image-link' href='#info-2'></a>
+      </section>
+
+    </article>
+
+    <article  class='cat-common'>
+
+      <label class='image-label' for='cat-id-3'>
+        <img class='image' src='image/cat3.jpeg' alt='Балинезийская кошка, мальчик, 3 года'>
+      </label>
+
+      <section class='preview'>
+        <h2 class='preview-title'>Кот номер 3</h2>
+        <a class='image-link' href='#info-3'></a>
+      </section>
+
+    </article>
+
+    <article  class='cat-common'>
+
+      <label class='image-label' for='cat-id-4'>
+        <img class='image' src='image/cat4.jpeg' alt='Кошка породы Петерболд, девочка, 5 лет'>
+      </label>
+
+      <section class='preview'>
+        <h2 class='preview-title'>Кот номер 4</h2>
+        <a class='image-link' href='#info-4'></a>
+      </section>
+
+    </article>
+
+    <article class='cat-common'>
+
+      <label class='image-label' for='cat-id-5'>
+        <img class='image' src='image/cat5.jpeg' alt='Русская голубая кошка, мальчик, 4 года'>
+      </label>
+
+      <section class='preview'>
+        <h2 class='preview-title'>Кот номер 5</h2>
+        <a class='image-link' href='#info-5'></a>
+      </section>
+
+    </article>
+
+    <div class='slider-dot-control'>
+      <label for=cat-id-1></label>
+      <label for=cat-id-2></label>
+      <label for=cat-id-3></label>
+      <label for=cat-id-4></label>
+      <label for=cat-id-5></label>
+    </div>
+
+  </section>
+
+  <aside id='info-1'  class='full-info'>
+    <section class='image-and-text-full'>
+
+      <section class='image-full'>
+        <img class='image' src='image/cat1.jpg' alt='Бенгальский кот, мальчик, 2 года'>
+      </section>
+
+      <section class='text-full'>
+        <h2>Кот номер 1</h2>
+        <ul class="cat-description">
+          <li>Пол: Male</li>
+          <li>Возраст: 2 года</li>
+          <li>Порода: Бенгальская кошка</li>
+          <li>Болезни: нет</li>
+        </ul>
+      </section>
+    </section>
+
+    <div class='close-full'>
+      <a href='#' class='close-inner'>&#10014;</a>
+    </div>
+  </aside>
+
+  <aside id='info-2'  class='full-info'>
+    <section class='image-and-text-full'>
+
+      <section class='image-full'>
+        <img class='image' src='image/cat2.jpeg' alt='Сиамская кошка, девочка, 4 года'>
+      </section>
+
+      <section class='text-full'>
+        <h2>Кот номер 2</h2>
+        <ul class="cat-description">
+          <li>Пол: Female</li>
+          <li>Возраст: 4 года</li>
+          <li>Порода: Сиамская кошка</li>
+          <li>Болезни: нет</li>
+        </ul>
+      </section>
+    </section>
+
+    <div class='close-full'>
+      <a href='#' class='close-inner'>&#10014;</a>
+    </div>
+  </aside>
+
+  <aside id='info-3'  class='full-info'>
+    <section class='image-and-text-full'>
+
+      <section class='image-full'>
+        <img class='image' src='image/cat3.jpeg' alt='Балинезийская кошка, мальчик, 3 года'>
+      </section>
+
+      <section class='text-full'>
+        <h2>Кот номер 3</h2>
+        <ul class="cat-description">
+          <li>Пол: Male</li>
+          <li>Возраст: 3 года</li>
+          <li>Порода: Балинезийская кошка</li>
+          <li>Болезни: нет</li>
+        </ul>
+      </section>
+    </section>
+
+    <div class='close-full'>
+      <a href='#' class='close-inner'>&#10014;</a>
+    </div>
+  </aside>
+
+  <aside id='info-4'  class='full-info'>
+    <section class='image-and-text-full'>
+
+      <section class='image-full'>
+        <img class='image' src='image/cat4.jpeg' alt='Кошка породы Петерболд, девочка, 5 лет'>
+      </section>
+
+      <section class='text-full'>
+        <h2>Кот номер 4</h2>
+        <ul class="cat-description">
+          <li>Пол: Female</li>
+          <li>Возраст: 5 лет</li>
+          <li>Порода: Петерболд</li>
+          <li>Болезни: нет</li>
+        </ul>
+      </section>
+    </section>
+
+    <div class='close-full'>
+      <a href='#' class='close-inner'>&#10014;</a>
+    </div>
+  </aside>
+
+  <aside id='info-5'  class='full-info'>
+    <section class='image-and-text-full'>
+
+      <section class='image-full'>
+        <img class='image' src='image/cat5.jpeg' alt='Русская голубая кошка, мальчик, 4 года'>
+      </section>
+
+      <section class='text-full'>
+        <h2>Кот номер 5</h2>
+        <ul class="cat-description">
+          <li>Пол: Male</li>
+          <li>Возраст: 4 года</li>
+          <li>Порода: Русская голубая кошка</li>
+          <li>Болезни: нет</li>
+        </ul>
+      </section>
+    </section>
+
+    <div class='close-full'>
+      <a href='#' class='close-inner'>&#10014;</a>
+    </div>
+  </aside>
+
+  <div class='black'></div>
+</main>
+
+<footer class='footer'>
+
+  <section class='footer-left'>
+    <h3>Напишите нам:</h3>
+    <section class='contacts'>
+      <ul class='mails'>
+        <li><a href='mailto:cats@babuli.ru' class='footer-link'>cats@babuli.ru</a></li>
+        <li><a href='mailto:vnuchek@babuli.ru' class=footer-link>vnuchek@babuli.ru</a></li>
+      </ul>
+
+      <ul class='phones'>
+        <li><a href='tel:+79996660000' class='footer-link'>+7 (999) 666-00-00</a></li>
+        <li><a href='tel:+71234567890' class='footer-link'>+7 (123) 456-78-90</a></li>
+      </ul>
+    </section>
+  </section>
+
+  <section class='footer-right'>
+    &copy; 2018&nbsp;ООО &laquo;<a href='#'>Бабушкины котятки</a>&raquo;
+  </section>
+</footer>
+</body>
+</html>

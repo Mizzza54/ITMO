@@ -1,0 +1,94 @@
+package dijkstra;
+
+import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
+/**
+ * @author Michael Gerasimov
+ */
+public class PriorityMultiQueueJava {
+
+    private final static Comparator<Node> COMPARATOR = new Comparator<Node>() {
+        @Override
+        public int compare(Node o1, Node o2) {
+            return Integer.compare(o1.getDistance(), o2.getDistance());
+        }
+    };
+
+    private final int numberOfQueues;
+    private final List<PriorityBlockingQueue<Node>> queueList;
+    private final Comparator<Node> comparator;
+
+    public PriorityMultiQueueJava(final int numberOfQueues, final Comparator<Node> comparator) {
+        this.comparator = comparator;
+        this.numberOfQueues = numberOfQueues;
+        this.queueList = Collections.nCopies(numberOfQueues * 2, new PriorityBlockingQueue<Node>(comparator));
+    }
+
+    private PriorityBlockingQueue<Node> getRandomQueue() {
+        return queueList.get(ThreadLocalRandom.current().nextInt(numberOfQueues));
+    }
+
+    public Node pop() {
+        PriorityBlockingQueue<Node> queue1 = getRandomQueue();
+        PriorityBlockingQueue<Node> queue2 = getRandomQueue();
+        queue1.lock();
+        queue2.lock();
+        Node result;
+        try {
+            if (Comparator.nullsLast(comparator).compare(queue1.peek(), queue2.peek()) > 0) {
+                result = queue2.pop();
+            } else {
+                result = queue1.pop();
+            }
+        } finally {
+            queue1.unlock();
+            queue2.unlock();
+        }
+        return result;
+    }
+
+    public boolean push(Node node) {
+        PriorityBlockingQueue<Node> queue = getRandomQueue();
+        boolean result;
+        queue.lock();
+        try {
+            result = queue.push(node);
+        } finally {
+            queue.unlock();
+        }
+        return result;
+    }
+}
+
+class PriorityBlockingQueueJava<T> {
+    private final Lock lock;
+    private final Queue<T> queue;
+
+    public PriorityBlockingQueueJava(Comparator<T> comparator) {
+        this.lock = new ReentrantLock();
+        this.queue = new PriorityQueue<>(comparator);
+    }
+
+    public T pop() {
+        return queue.poll();
+    }
+
+    public boolean push(T value) {
+        return queue.add(value);
+    }
+
+    public T peek() {
+        return queue.peek();
+    }
+
+    public void lock() {
+        lock.lock();
+    }
+
+    public void unlock() {
+        lock.unlock();
+    }
+}
