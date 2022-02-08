@@ -5,6 +5,7 @@ module ParserGenerator.FirstFollowBuild
   , buildFirst
   , mappa
   , buildFollow
+  , isNTerminal
   ) where
 
 ----------------------------------------------------------------------

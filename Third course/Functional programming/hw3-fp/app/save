@@ -1,0 +1,132 @@
+{-# LANGUAGE FlexibleContexts      #-}
+{-# LANGUAGE FlexibleInstances     #-}
+{-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE TemplateHaskell       #-}
+{-# LANGUAGE TypeFamilies          #-}
+{-# LANGUAGE UndecidableInstances  #-}
+{-# LANGUAGE DeriveAnyClass #-}
+module HW3.Arity
+  ( Arity (..)
+  , UnaryFunction
+  , BinaryFunction
+  , TernaryFunction
+  , VariadicFunction
+  , BinaryLazyFunction
+  , TernaryLazyFunction
+  , fExample4) where
+
+----------------------------------------------------------------------
+-- Imports
+----------------------------------------------------------------------
+
+import           Control.Monad.Except (ExceptT)
+import qualified Data.Kind
+import           Language.Haskell.TH  hiding (Arity)
+
+import           HW3.Base             (HiError (..), HiExpr (..), HiValue (..))
+import Control.Exception.Base (throw, Exception)
+
+----------------------------------------------------------------------
+-- Type
+----------------------------------------------------------------------
+
+data ListApply a b = Cons b (ListApply a (a -> b)) | Few | Many
+
+data LevelZero = Z deriving Show
+newtype LevelSucc n = S n deriving Show
+
+data Arity m
+  = NotFunction
+  | Unary (UnaryFunction m)
+  | Binary (BinaryFunction m)
+  | Ternary (TernaryFunction m)
+  | BinaryTernary (BinaryFunction m) (TernaryFunction m)
+  | Variadic (VariadicFunction m)
+  | BinaryLazy (BinaryLazyFunction m)
+  | TernaryLazy (TernaryLazyFunction m)
+
+type UnaryFunction m = HiValue -> ExceptT HiError m HiValue
+
+type BinaryFunction m = HiValue -> HiValue -> ExceptT HiError m HiValue
+
+type TernaryFunction m = HiValue -> HiValue -> HiValue -> ExceptT HiError m HiValue
+
+type VariadicFunction m = [HiValue] -> ExceptT HiError m HiValue
+
+type BinaryLazyFunction m = HiExpr -> HiExpr -> ExceptT HiError m HiValue
+
+type TernaryLazyFunction m = HiExpr -> HiExpr -> HiExpr -> ExceptT HiError m HiValue
+
+data ArityException = FewArgumentsException | ManyArgumentsException
+   deriving (Show, Exception)
+
+----------------------------------------------------------------------
+-- Classes
+----------------------------------------------------------------------
+
+class Lift n a b where
+    type I n a b :: Data.Kind.Type
+    liftMy :: n -> I n a b -> ListApply a b
+
+----------------------------------------------------------------------
+-- Instances
+----------------------------------------------------------------------
+
+instance Lift LevelZero a b where
+    type I LevelZero a b = b
+    liftMy _ b = Cons b tooMany where
+      tooMany = throw ManyArgumentsException
+
+instance (Lift n a (a -> b), I n a (a -> b) ~ (a -> I n a b)) => Lift (LevelSucc n) a b where
+    type I (LevelSucc n) a b = a -> I n a b
+    liftMy (S n) f = Cons tooFew (liftMy n f) where
+      tooFew  = throw FewArgumentsException
+
+----------------------------------------------------------------------
+-- Internal utilities
+----------------------------------------------------------------------
+
+headF :: ListApply a b -> b
+headF (Cons b _) = b
+
+mapF :: (b -> c) -> ListApply a b -> ListApply a c
+mapF f (Cons v fs) = Cons (f v) (mapF (f.) fs)
+
+partialApply :: ListApply a b -> [a] -> ListApply a b
+partialApply fs          []     = fs
+partialApply (Cons f fs) (x:xs) = partialApply (mapF ($ x) fs) xs
+
+----------------------------------------------------------------------
+-- Apply for everything function
+----------------------------------------------------------------------
+
+apply :: ListApply a b -> [a] -> b
+apply f xs = headF (partialApply f xs)
+
+----------------------------------------------------------------------
+-- Template Haskell
+----------------------------------------------------------------------
+
+nTimesTH :: Int -> Q Exp
+nTimesTH n = do
+  let go k | k <= 0 = (conE (mkName "Z"))
+      go k          = appE (conE (mkName "S")) (go (k - 1))
+  (go n)
+
+funcNTimes n = nTimesTH n
+
+f a b c = (a + b) + c
+
+fF2 = liftMy (S (S (S Z))) f
+
+fExample4 = apply fF2 [1, 2, 3, 4]
+
+
+testApply :: HiMonad m => Arity m -> [HiExpr] -> ExceptT HiError m HiValue
+testApply func args = do
+  newArgs <- mapM eHiExpr args
+  case func of
+    Unary funcU -> do
+      let arit = getArity
+      let newFunc = liftMy $(funcNTimes 1) funcU
+      return undefined

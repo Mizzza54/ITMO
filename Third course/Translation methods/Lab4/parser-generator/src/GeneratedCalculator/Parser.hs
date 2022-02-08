@@ -64,12 +64,29 @@ token8 a0 = do
   where func (TokenNum _) = True
         func _ = False
 
+token9 a0 = do
+  a1 <- pcSatisfyPredicate func
+  return (a0 )
+  where func (TokenOD ) = True
+        func _ = False
+
+token10 a0 = do
+  a1 <- pcSatisfyPredicate func
+  return (a0 )
+  where func (TokenCD ) = True
+        func _ = False
+
 
 parserE a0 = do
   foo <- nextToken
   modifyExceptState (rollback foo)
   case foo of
     TokenOB  -> do 
+      a1<- parserT (a0)
+      a2<- parserET (Attributes { _acc = _res a1 } )
+      return (Attributes { _res = _res a2 })
+
+    TokenOD  -> do 
       a1<- parserT (a0)
       a2<- parserET (Attributes { _acc = _res a1 } )
       return (Attributes { _res = _res a2 })
@@ -100,6 +117,10 @@ parserET a0 = do
       
       return (Attributes { _res = _acc a0 } )
 
+    TokenCD  -> do 
+      
+      return (Attributes { _res = _acc a0 } )
+
     TokenEndInput -> do 
       
       return (Attributes { _res = _acc a0 } )
@@ -110,6 +131,11 @@ parserT a0 = do
   modifyExceptState (rollback foo)
   case foo of
     TokenOB  -> do 
+      a1<- parserF (a0)
+      a2<- parserTP (Attributes { _acc = _res a1 } )
+      return (Attributes { _res = _res a2 })
+
+    TokenOD  -> do 
       a1<- parserF (a0)
       a2<- parserTP (Attributes { _acc = _res a1 } )
       return (Attributes { _res = _res a2 })
@@ -148,6 +174,10 @@ parserTP a0 = do
       
       return (Attributes { _res = _acc a0 } )
 
+    TokenCD  -> do 
+      
+      return (Attributes { _res = _acc a0 } )
+
     TokenEndInput -> do 
       
       return (Attributes { _res = _acc a0 } )
@@ -166,6 +196,12 @@ parserF a0 = do
       a2<- parserE (a0)
       a3<- token7 (a0)
       return (Attributes { _res = _res a2 } )
+
+    TokenOD  -> do 
+      a1<- token9 (a0)
+      a2<- parserE (a0)
+      a3<- token10 (a0)
+      return (Attributes { _res = getFractionalPart $ _res a2 } )
 
 
 
@@ -195,5 +231,7 @@ evaluateTokens = parser (Attributes 0 0)
 
 evaluate :: String -> Except ParseError Double
 evaluate = evaluateTokens . tokenize
+
+getFractionalPart x = snd (properFraction x) :: Double
 
 

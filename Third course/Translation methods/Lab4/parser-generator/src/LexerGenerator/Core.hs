@@ -27,13 +27,8 @@ parseTokenName = pcSatisfyElems "%tokenname" >> parseHaskellCode
 
 parseRegexPattern :: Parser String String
 parseRegexPattern = do
-  x <- pcBetweenChar '[' ']' (pcTakeWhile (/= ']'))
-  y <- pcNext
-  if y == '1'
-    then do
-      return $ '[' : x ++ [']']
-    else do
-      return $ '[' : x ++ [']'] ++ [y]
+  x <- pcBetweenChar '%' '$' (pcTakeWhile (/= '$'))
+  return x
 
 parseRules :: Parser String Rule
 parseRules = do

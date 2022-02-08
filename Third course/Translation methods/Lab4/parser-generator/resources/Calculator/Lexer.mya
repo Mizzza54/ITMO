@@ -9,14 +9,16 @@ module GeneratedCalculator.Lexer
 %lexername { lexer }
 %tokenname { Token }
 
-[0-9]+          { TokenNum . read }
-\\+             { const TokenSum }
--               { const TokenSub }
-\\*             { const TokenMul }
-/               { const TokenDiv }
-\\(             { const TokenOB }
-\\)             { const TokenCB }
-[ \t\r\n]+      { const TokenSP }
+%[0-9]+[.][0-9]+$         { TokenNum . read }
+\\+                       { const TokenSum }
+-                         { const TokenSub }
+\\*                       { const TokenMul }
+/                         { const TokenDiv }
+\\(                       { const TokenOB }
+\\)                       { const TokenCB }
+%[ \t\r\n]+$              { const TokenSP }
+\\{                       { const TokenOD }
+\\}                       { const TokenCD }
 
 {
 data Token
@@ -30,6 +32,8 @@ data Token
  | TokenNum Double
  | TokenEndInput
  | Epsilon
+ | TokenOD
+ | TokenCD
  deriving (Show, Eq)
 
 tokenize :: String -> [Token]

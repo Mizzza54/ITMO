@@ -20,13 +20,15 @@ import GeneratedCalculator.Lexer (Token(..), tokenize)
        '('      { TokenOB }   % a0 %
        ')'      { TokenCB }   % a0 %
        const    { TokenNum _} % Attributes { _res = (token2num a1) } %
+       '{'      { TokenOD }   % a0 %
+       '}'      { TokenCD }   % a0 %
 %%
 
 %rules
 E :   | T ET 	    	     % $0 :: Attributes { _res = _res a2 };
                                $2 :: Attributes { _acc = _res a1 } %
 
-ET :  |  '+' T ET	   	     % $0 :: Attributes { _res = _res a3 };
+ET :  | '+' T ET	   	     % $0 :: Attributes { _res = _res a3 };
                                $3 :: Attributes { _acc = _acc a0 + _res a2 } %
       | '-' T ET	         % $0 :: Attributes { _res = _res a3 };
                                $3 :: Attributes { _acc = _acc a0 - _res a2 } %
@@ -43,6 +45,7 @@ TP : |  '*' F TP	         % $0 :: Attributes { _res = _res a3 };
 
 F :  |  const		         % $0 :: Attributes { _res = _res a1 } %
 	 | '(' E ')'             % $0 :: Attributes { _res = _res a2 } %
+	 | '{' E '}'             % $0 :: Attributes { _res = getFractionalPart $ _res a2 } %
 
 
 %%
@@ -57,5 +60,7 @@ evaluateTokens = parser (Attributes 0 0)
 
 evaluate :: String -> Except ParseError Double
 evaluate = evaluateTokens . tokenize
+
+getFractionalPart x = snd (properFraction x) :: Double
 
 }

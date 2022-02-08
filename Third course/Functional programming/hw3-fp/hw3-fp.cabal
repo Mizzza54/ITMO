@@ -1,0 +1,87 @@
+cabal-version: 1.12
+
+-- This file has been generated from package.yaml by hpack version 0.34.4.
+--
+-- see: https://github.com/sol/hpack
+
+name:           hw3-fp
+version:        0.1.0.0
+description:    Please see the README on GitHub at <https://github.com/Github username here/hw3-fp#readme>
+homepage:       https://github.com/Github username here/hw3-fp#readme
+bug-reports:    https://github.com/Github username here/hw3-fp/issues
+author:         Author name here
+maintainer:     Author email here
+copyright:      2019 Author name here
+license:        BSD3
+license-file:   LICENSE
+build-type:     Simple
+extra-source-files:
+    README.md
+    ChangeLog.md
+
+source-repository head
+  type: git
+  location: https://github.com/Github username here/hw3-fp
+
+library
+  exposed-modules:
+      HW3.Action
+      HW3.Base
+      HW3.Evaluator
+      HW3.Parser
+      HW3.Pretty
+  other-modules:
+      Paths_hw3_fp
+  hs-source-dirs:
+      src
+  build-depends:
+      base >=4.7 && <5
+    , bytestring
+    , containers
+    , directory
+    , haskeline
+    , megaparsec
+    , mtl
+    , parsec
+    , parser-combinators
+    , prettyprinter
+    , prettyprinter-ansi-terminal
+    , random
+    , scientific
+    , serialise
+    , template-haskell
+    , text
+    , time
+    , transformers
+    , zlib
+  default-language: Haskell2010
+
+executable hi
+  main-is: Main.hs
+  other-modules:
+      Paths_hw3_fp
+  hs-source-dirs:
+      app
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      base >=4.7 && <5
+    , bytestring
+    , containers
+    , directory
+    , haskeline
+    , hw3-fp
+    , megaparsec
+    , mtl
+    , parsec
+    , parser-combinators
+    , prettyprinter
+    , prettyprinter-ansi-terminal
+    , random
+    , scientific
+    , serialise
+    , template-haskell
+    , text
+    , time
+    , transformers
+    , zlib
+  default-language: Haskell2010

@@ -14,7 +14,7 @@ module GeneratedTex2Html.Lexer
 \\$                         { const TokenDollar }
 \\^                         { const TokenCircumflexus }
 _                           { const TokenUnderline }
-[a-zA-Z0-9=+*-/]1           { TokenWord }
+[a-zA-Z0-9=+*-/]            { TokenWord }
 
 {
 data Token

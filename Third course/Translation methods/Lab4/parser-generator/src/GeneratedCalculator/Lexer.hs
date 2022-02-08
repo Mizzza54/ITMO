@@ -11,7 +11,7 @@ import           Utils.Base              (Except (..), ParseError (..), Parser,
                                           run)                                  
 import           Utils.ParserCombinators (pcEof, pcRegExp, pcSkipSpaces)        
                                                                                 
-tokenParse1 = (TokenNum . read ) <$> pcRegExp "^[0-9]+"
+tokenParse1 = (TokenNum . read ) <$> pcRegExp "^[0-9]+[.][0-9]+"
 
 tokenParse2 = (const TokenSum ) <$> pcRegExp "^\\+"
 
@@ -25,10 +25,14 @@ tokenParse6 = (const TokenOB ) <$> pcRegExp "^\\("
 
 tokenParse7 = (const TokenCB ) <$> pcRegExp "^\\)"
 
-tokenParse8 = (const TokenSP ) <$> pcRegExp "^[\t\r\n]+"
+tokenParse8 = (const TokenSP ) <$> pcRegExp "^[ \t\r\n]+"
+
+tokenParse9 = (const TokenOD ) <$> pcRegExp "^\\{"
+
+tokenParse10 = (const TokenCD ) <$> pcRegExp "^\\}"
                                                                               
                                                                                 
-commonLexer = tokenParse1 <|> tokenParse2 <|> tokenParse3 <|> tokenParse4 <|> tokenParse5 <|> tokenParse6 <|> tokenParse7 <|> tokenParse8                                                                
+commonLexer = tokenParse1 <|> tokenParse2 <|> tokenParse3 <|> tokenParse4 <|> tokenParse5 <|> tokenParse6 <|> tokenParse7 <|> tokenParse8 <|> tokenParse9 <|> tokenParse10                                                                
                                                                                 
 lexer  = many $ pcSkipSpaces commonLexer                                            
                                                                                 
@@ -43,6 +47,8 @@ data Token
  | TokenNum Double
  | TokenEndInput
  | Epsilon
+ | TokenOD
+ | TokenCD
  deriving (Show, Eq)
 
 tokenize :: String -> [Token]
