@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="ru.ifmo.gerasimov.lenta" />
+        <module name="ru.ifmo.gerasimov.ria" />
+        <module name="ru.ifmo.gerasimov.core" />
+        <module name="ru.ifmo.gerasimov.aif" />
+        <module name="ru.ifmo.gerasimov.command" />
+        <module name="ru.ifmo.gerasimov.AiF" />
+      </profile>
+    </annotationProcessing>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="ru.ifmo.gerasimov.AiF" options="" />
+      <module name="ru.ifmo.gerasimov.command" options="" />
+      <module name="ru.ifmo.gerasimov.core" options="" />
+      <module name="ru.ifmo.gerasimov.ria" options="" />
+    </option>
+  </component>
+</project>

@@ -1,0 +1,81 @@
+\import Arith.Nat
+\import Logic (Empty, TruncP, absurd, inP, truncP)
+\import Logic.Meta
+\import Order.LinearOrder
+\import Order.PartialOrder
+\import Paths
+\open Nat (*, +)
+
+\data Div3 (x : Nat)
+  | remainder-zero (∃ (p : Nat) (p * 3     = x))
+  | remainder-one  (∃ (p : Nat) (p * 3 + 1 = x))
+  | remainder-two  (∃ (p : Nat) (p * 3 + 2 = x))
+  | truncDiv3 (a b : Div3 x) (i : I) \elim i {
+    | left => a
+    | right => b
+  }
+\where {
+  \use \level levelProp {x : Nat} (a b : Div3 x) : a = b => path (truncDiv3 a b)
+}
+
+\func numberDecompositions-Div3 (x : Nat) (f : ∃ (p q : Nat) (3 * p + q = x) (b : border q)) : Div3 x \elim f
+  | inP a => \case \elim a \with {
+    | (p, q, e, b) => \case \elim q, e, b \with {
+      | 0, e, b => remainder-zero (inP (p, inv mult3-isAdd3Times *> numberDecompositions-Div3-lemma1 e idp))
+      | 1, e, b => remainder-one (inP (p, inv (pmap (\lam i => suc i) mult3-isAdd3Times) *> numberDecompositions-Div3-lemma2 e idp))
+      | 2, e, b => remainder-two (inP (p, inv (pmap (\lam i => suc (suc i)) mult3-isAdd3Times) *> numberDecompositions-Div3-lemma3 e idp))
+      | suc (suc (suc n)), e, b => absurd b
+    }
+  }
+
+\func border (x : Nat) : \Type
+  | 0 => \Sigma
+  | 1 => \Sigma
+  | 2 => \Sigma
+  | x => Empty
+
+\func mult3-isAdd3Times {x : Nat} : 3 * x = x + x + x
+  | {0} => idp
+  | {suc x} => pmap (\lam i => i + 3) mult3-isAdd3Times
+
+\func numberDecompositions-Div3-lemma1 {a b x : Nat} (p : 3 * a + b = x) (q : b = 0) : 3 * a = x
+  | {0}, {0}, {0}, p, q => idp
+  | {0}, {suc b}, {suc x}, p, ()
+  | {suc a}, {0}, {suc x}, p, q => p
+  | {suc a}, {suc b}, {suc x}, p, ()
+
+\func numberDecompositions-Div3-lemma2 {a b x : Nat} (p : 3 * a + b = x) (q : b = 1) : 3 * a + 1 = x
+  | {0}, {0}, {0}, p, ()
+  | {0}, {suc b}, {suc x}, p, q => inv q *> p
+  | {suc a}, {0}, {suc x}, p, ()
+  | {suc a}, {suc b}, {suc x}, p, q => numberDecompositions-Div3-lemma2-1 p q
+
+\func numberDecompositions-Div3-lemma2-1 {a b x : Nat} (p : suc (suc (suc (suc (3 * a + b)))) = suc x) (q : suc b = 1) : suc (suc (suc (suc (3 * a)))) = suc x
+  | {0}, {0}, {suc x}, p, q => p
+  | {0}, {suc b}, {suc x}, p, ()
+  | {suc a}, {0}, {suc x}, p, q => p
+  | {suc a}, {suc b}, {suc x}, p, ()
+
+\func numberDecompositions-Div3-lemma3 {a b x : Nat} (p : 3 * a + b = x) (q : b = 2) : 3 * a + 2 = x
+  | {0}, {0}, {0}, p, ()
+  | {0}, {suc b}, {suc x}, p, q => inv q *> p
+  | {suc a}, {0}, {suc x}, p, ()
+  | {suc a}, {suc b}, {suc x}, p, q => numberDecompositions-Div3-lemma3-1 p q
+
+\func numberDecompositions-Div3-lemma3-1 {a b x : Nat} (p : suc (suc (suc (suc (3 * a + b)))) = suc x) (q : suc b = 2) : suc (suc (suc (suc (suc (3 * a))))) = suc x
+  | {0}, {0}, {suc x}, p, ()
+  | {0}, {suc b}, {suc x}, p, q => numberDecompositions-Div3-lemma3-2 {0} {b} {x} p q
+  | {suc a}, {0}, {suc x}, p, ()
+  | {suc a}, {suc b}, {suc x}, p, q => numberDecompositions-Div3-lemma3-3 p q
+
+\func numberDecompositions-Div3-lemma3-2 {a b x : Nat} (p : suc (suc (suc (suc (suc b)))) = suc (suc x)) (q :  suc (suc b) = 2) : 5 = suc (suc x)
+  | {0}, {0}, {suc x}, p, q => p
+  | {0}, {suc b}, {suc x}, p, ()
+  | {suc a}, {0}, {suc x}, p, q => p
+  | {suc a}, {suc b}, {suc x}, p, ()
+
+\func numberDecompositions-Div3-lemma3-3 {a b x : Nat} (p : suc (suc (suc (suc (suc (suc (suc (suc (3 * a + b)))))))) = suc (suc x)) (q :  suc (suc b) = 2) : suc (suc (suc (suc (suc (suc (suc (suc (3 * a)))))))) = suc (suc x)
+  | {0}, {0}, {suc x}, p, q => p
+  | {0}, {suc b}, {suc x}, p, ()
+  | {suc a}, {0}, {suc x}, p, q => p
+  | {suc a}, {suc b}, {suc x}, p, ()

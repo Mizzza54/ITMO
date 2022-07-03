@@ -1,0 +1,54 @@
+\import Data.Bool
+\import Equiv
+\import HLevel
+\import Logic
+\import Set
+\open Equiv (isInj)
+
+\data Empty
+
+\data Decide (A : \Prop)
+  | yes A
+  | no (A -> Empty)
+
+\func hasLevel (A : \Type) (suc-l : Nat) : \Type \elim suc-l
+  | 0 => isProp A
+  | suc suc-l => \Pi (x y : A) -> (x = y) `hasLevel` suc-l
+
+-- 3. We say that a type 'A' is trivial if there exists an element in 'A' such that it is equal to
+--    any other element in 'A'.
+--    Prove that 'A' is trivial iff 'A' is proposition and 'A' is inhabited.
+
+\func isTriv (A : \Type) => \Sigma (a : A) (\Pi (a' : A) -> a = a')
+
+\func \infix 1 <-> (A B : \Type) => \Sigma (A -> B) (B -> A)
+
+\func isTriv-lem (A : \Type) : isTriv A <-> (\Sigma (isProp A) A) => {?}
+
+-- 6. Prove that <= and <=' are predicates.
+
+\data <= (n m : Nat) : \Set0 \with
+  | 0, m => z<=n
+  | suc n, suc m => s<=s (<= n m)
+
+\data <=' (n m : Nat) : \Set0 \elim m
+  | suc m => <=-step (<=' n m)
+  | m => <=-refl (n = m)
+
+\func <=-isProp {n m : Nat} : isProp (<= n m) => {?}
+
+-- In the proof of <='-isProp it is allowed to use the fact that Nat is set
+-- without a proof. We will return to the proof of this fact later.
+\func Nat-isSet : isSet Nat => {?}
+
+\func <='-isProp {n m : Nat} : isProp (<=' n m) => {?}
+
+-- 7. Prove that 'ReflClosure LessOrEq' is not a predicate, but 'ReflClosure (\lam x y => T (x < y))' is a predicate.
+
+\func \infix 4 < (n m : Nat) : Bool
+  | _, 0 => false
+  | 0, suc _ => true
+  | suc n, suc m => n < m
+
+\func Dec-isSet {A : \Type} (dec : \Pi (x y : A) -> Decide (TruncP (x = y))) : isSet A
+  => {?}

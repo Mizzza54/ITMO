@@ -1,0 +1,45 @@
+\func numberDecompositions-Div3 (x : Nat) (f : ∃ (p q : Nat) (3 * p + q = x) (b : border (q))) : Div3 x \elim f
+  | inP a => \case \elim a \with {
+    | (p, q, e, b) => \case \elim q, e \with {
+      | 0, e => remainder-zero (inP (p, inv mult3-isAdd3Times *> numberDecompositions-Div3-lemma1 e idp))
+      | 1, e => remainder-one (inP (p, inv (pmap (\lam i => suc i) mult3-isAdd3Times) *> numberDecompositions-Div3-lemma2 e idp))
+      | 2, e => remainder-two (inP (p, inv (pmap (\lam i => suc (suc i)) mult3-isAdd3Times) *> numberDecompositions-Div3-lemma3 e idp))
+      | n, e => absurd b
+    }
+  }
+
+
+
+a b | c d     -> a c b d
+c d a | b
+b c d a
+
+
+
+a c b d
+a | c b d
+c b d a
+c | b d a b c
+b d a b c c
+b d a b c
+b d a b c c b
+b | d a b c c b
+d a b c c b b
+d a b c c | b
+b d a b c c
+b d a b | c
+c b d a b
+
+
+
+
+
+
+[] a | c b
+c | b [] a
+b [] a | c
+b [] a c
+
+a c b -> b a c -> c b a -> a c b
+
+a b c -> c a b -> b c a -> a b c

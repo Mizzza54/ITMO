@@ -1,0 +1,297 @@
+\import Prelude
+\open Nat (+, *)
+-------------------------------------------------
+-- Utils
+-------------------------------------------------
+
+\data Bool | false | true
+
+\data List (A : \Type) | nil | cons A (List A)
+
+\func if {A : \Type} (b : Bool) (t e : A) : A \elim b
+  | true => t
+  | false => e
+
+\data Empty
+
+\data Unit | unit
+
+\func T (b : Bool) : \Type
+  | true => Unit
+  | false => Empty
+
+\func \infixl 6 && (a b : Bool) : Bool \elim a, b
+  | true, true => true
+  | true, false => false
+  | false, _ => false
+
+\func transport {A : \Type} (B : A -> \Type) {a a' : A} (p : a = a') (b : B a) : B a'
+  => coe (\lam i => B (p @ i)) b right
+
+-- symmetry
+\func inv {A : \Type} {a a' : A} (p : a = a') : a' = a
+  => transport (\lam x => x = a) p idp
+
+-- transitivity
+\func trans {A : \Type} {a a' a'' : A} (p : a = a') (q : a' = a'') : a = a''
+  => transport (\lam x => a = x) q p
+
+-- congruence
+\func pmap {A B : \Type} (f : A -> B) {a a' : A} (p : a = a') : f a = f a'
+  => transport (\lam x => f a = f x) p idp
+
+-------------------------------------------------
+-- Examples of proofs: +-assoc and reverse-isInvolution
+-------------------------------------------------
+
+-------------------------------------------------
+-- Proof task #1
+
+-- Если два типа равны, то существует функция между ними
+-------------------------------------------------
+
+\func repl (A B : \Type) (eqProof : A = B) : A -> B =>
+  \lam a => coe (\lam i => (\lam b => b) (eqProof @ i)) a right
+
+\func repl' (A B : \Type) (eqProof : A = B) : A -> B =>
+  \lam a => transport (\lam b => b) eqProof a
+
+-------------------------------------------------
+-- Proof task #2
+
+-- Докажите коммутативность умножения
+-------------------------------------------------
+
+\func mul_zero (n : Nat) : n * 0 = 0
+  | 0 => idp
+  | suc n => mul_zero n
+
+\func zero_mul (n : Nat) : 0 * n = 0
+  | 0 => idp
+  | suc n => zero_mul n
+
+\func mul_succ (n m : Nat) : n * suc m = n * m + n
+  | _, _ => idp
+
+\lemma succ_mul (n m : Nat) : suc n * m = n * m + m \elim m
+  | 0 => idp
+  | suc m => succ_mul-lemma1 n m *>
+    succ_mul-lemma2 n m *>
+    succ_mul-lemma3 n m *>
+    succ_mul-lemma4 n m
+
+-- (n + 1) * (m + 1) = n * m + n + m + 1
+
+\func succ_mul-lemma1 (n m : Nat) :
+  suc (suc n * m + n)
+    =
+  suc (n * m + m + n)
+  => pmap (\lam x => x + n + 1) (succ_mul n m)
+
+\func succ_mul-lemma2 (n m : Nat) :
+  suc (n * m + m + n)
+    =
+  suc (n * m + (m + n))
+  => pmap suc (+-assoc (n * m) m n)
+
+\func succ_mul-lemma3 (n m : Nat) :
+  suc (n * m + (m + n))
+    =
+  suc (n * m + (n + m))
+  => pmap (suc (n * m) + ) (+-comm m n)
+
+\func succ_mul-lemma4 (n m : Nat) :
+  suc (n * m + (n + m))
+    =
+  suc (n * m + n + m)
+  => pmap suc (inv (+-assoc (n * m) n m))
+
+\func *-comm (n m : Nat) : n * m = m * n \elim m
+  | 0 => inv (zero_mul n)
+--  n * m + n = suc m * n
+  | suc m => *-comm-lemma1 n m *>
+    *-comm-lemma2 n m
+
+\func *-comm-lemma1 (n m : Nat) :
+  n * m + n
+    =
+  m * n + n
+  => pmap (\lam x => x + n) (*-comm n m)
+
+\func *-comm-lemma2 (n m : Nat) :
+  m * n + n
+    =
+  suc m * n
+  => inv (succ_mul m n)
+
+-------------------------------------------------
+-- Proof task #3
+
+-- Докажите дистрибутивность: a * (b + c) = a * b + a * c
+-------------------------------------------------
+
+\func \infixr 5 *> {A : \Type} {a a' a'' : A} (p : a = a') (q : a' = a'') : a = a''
+  => transport (\lam x => a = x) q p
+
+\func +-comm (n m : Nat) : n + m = m + n
+  | 0, 0 => idp
+  | suc n, 0 => pmap suc (+-comm n 0)
+  | 0, suc m => pmap suc (+-comm 0 m)
+  | suc n, suc m => pmap suc (+-comm (suc n) m *> pmap suc (inv (+-comm n m)) *> +-comm n (suc m))
+
+\func +-assoc (x y z : Nat) : (x + y) + z = x + (y + z) \elim z
+  | 0 => idp
+  | suc z => pmap suc (+-assoc x y z)
+
+\func ldistr (n m k : Nat) : n * (m + k) = n * m + n * k \elim m
+  | 0 => idp
+  | suc m => ldistr-lemma1 n m k *>
+    ldistr-lemma2 n m k *>
+    ldistr-lemma3 n m k *>
+    ldistr-lemma4 n m k
+
+\func ldistr-lemma1 (n m k : Nat) :
+  n * (m + k) + n
+    =
+  n * m + n * k + n
+  => pmap (\lam z => z + n) (ldistr n m k)
+
+\func ldistr-lemma2 (n m k : Nat) :
+  n * m + n * k + n
+    =
+  n * m + (n * k + n)
+  => +-assoc (n * m) (n * k) n
+
+\func ldistr-lemma3 (n m k : Nat) :
+  n * m + (n * k + n)
+    =
+  n * m + (n + n * k)
+  => pmap ((n * m) + ) (+-comm (n * k) n)
+
+\func ldistr-lemma4 (n m k : Nat) :
+  n * m + (n + n * k)
+    =
+  n * m + n + n * k
+  => inv (+-assoc (n * m) n (n * k))
+
+-- n * m + n + n * k == n * m + (n * k + n) == n * (m + k) + n = n
+
+-------------------------------------------------
+-- Proof task #4
+-------------------------------------------------
+
+-- hz
+
+-------------------------------------------------
+-- Proof task #5
+-------------------------------------------------
+
+\data reservedType | RT
+
+\func T' (x : Nat) : \Type \elim x
+  | 0 => reservedType
+  | _ => Empty
+
+\func zero/=suc (x : Nat) (p : 0 = suc x) : Empty
+  => transport T' p RT
+
+-------------------------------------------------
+-- Proof task #6
+-------------------------------------------------
+
+\func task6 (a b c : Nat) (p : a + b = a + c) : b = c => {?}
+
+-------------------------------------------------
+-- Proof task #7
+-------------------------------------------------
+
+\func task7 (x : Nat) (p : x = 2 * x) : x = 0
+  | 0, p => idp
+  | x, p => task7-lemma3 x (task7-lemma2 x p)
+
+-- 2 * x + 2 == x + 1 + x + 1
+
+\func task7-lemma1 (x : Nat) : 2 * x = x + x
+  | 0 => idp
+  | suc x => pmap (\lam i => i + 2) (task7-lemma1 x)
+
+\func task7-lemma2 (x : Nat) (p : x = 2 * x) : x + 0 = x + x
+  | 0, p => idp
+  | x, p => p *> task7-lemma1 x
+
+\func task7-lemma3 (x : Nat) (p : x + 0 = x + x) : x = 0 => inv (task6 x 0 x p)
+
+
+-------------------------------------------------
+-- Proof task #10
+-------------------------------------------------
+
+\func lim_sub(a b : Nat) : Nat
+  | 0, 0 => 0
+  | 0, b => 0
+  | a, 0 => a
+  | suc a, suc b => lim_sub a b
+
+\func task10 (a b : Nat) : lim_sub (a + b) b = a \elim b
+  | 0 => task10-lemma1 a
+  | suc b => task10 a b
+
+\func task10-lemma1 (a : Nat) : lim_sub a 0 = a
+  | 0 => idp
+  | suc a => idp
+
+-------------------------------------------------
+-- Proof task #11
+-------------------------------------------------
+
+\func pow2 (n : Nat) : Nat
+  | 0 => 1
+  | suc n => 2 * (pow2 n)
+
+\func pow2-test1 : pow2 0 = 1 => idp
+
+\func pow2-test2 : pow2 1 = 2 => idp
+
+\func pow2-test3 : pow2 2 = 4 => idp
+
+\func pow2-test4 : pow2 3 = 8 => idp
+
+\func pow2-test5 : pow2 4 = 16 => idp
+
+\func pow2-test6 : pow2 10 = 1024 => idp
+
+\func task11 (a b : Nat) : pow2 (a + b) = (pow2 a) * (pow2 b) \elim b
+  | 0 => idp
+  | suc b => task11-lemma1 a b
+
+\func task11-lemma1 (a b : Nat) : 2 * pow2 (a + b) = pow2 a * (2 * pow2 b)
+  => pmap (\lam i => 2 * i) (task11 a b) *> task11-lemma4 a b *> inv (task11-lemma2 a b)
+
+\func task11-lemma2 (a b : Nat) : pow2 a * (2 * pow2 b) = 2 * pow2 a * pow2 b
+  => (inv (*-assoc (pow2 a) 2 (pow2 b))) *> task11-lemma3 a b
+
+
+\func task11-lemma3 (a b : Nat) : (pow2 a + pow2 a) * pow2 b = 2 * pow2 a * pow2 b
+  => pmap (\lam i => i * pow2 b) (inv (task7-lemma1 (pow2 a)))
+
+\func task11-lemma4 (a b : Nat) : 2 * (pow2 a * pow2 b) = 2 * pow2 a * pow2 b => inv (*-assoc 2 (pow2 a) (pow2 b))
+
+\func *-assoc (x y z : Nat) : (x * y) * z = x * (y * z) \elim z
+  | 0 => idp
+  | suc z => mul_succ (x * y) z *>
+    inv (*-assoc-lemma2 x y z) *>
+    inv (*-assoc-lemma1 x y z)
+
+\func *-assoc-lemma1 (x y z : Nat) :
+  x * (y * z + y)
+    =
+  x * (y * z) + x * y
+  => mul_add x (y * z) y
+
+\func *-assoc-lemma2 (x y z : Nat) :
+  x * (y * z) + x * y
+    =
+  x * y * z + x * y
+  => pmap (\lam i => i + (x * y)) (inv (*-assoc x y z))
+
+\func mul_add (x y z : Nat) : x * (y + z) = x * y + x * z => ldistr x y z

@@ -1,0 +1,7 @@
+ru/ifmo/gerasimov/core/services/ServiceConfiguration.class
+ru/ifmo/gerasimov/core/parser/RSSParser.class
+ru/ifmo/gerasimov/core/exceptions/WrappedException.class
+ru/ifmo/gerasimov/core/services/AbstractStatsService.class
+ru/ifmo/gerasimov/core/services/impl/ServiceImpl.class
+ru/ifmo/gerasimov/core/utils/WordStatisticPair.class
+ru/ifmo/gerasimov/core/services/StatsService.class

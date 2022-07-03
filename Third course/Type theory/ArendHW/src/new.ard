@@ -1,0 +1,40 @@
+\import Algebra.Monoid
+\import Arith.Nat
+\import Arith.Prime
+\import Data.Bool
+\import Logic.Meta
+\import hw1 (Empty, pmap)
+\import wtf.Utils (absurd)
+\import wtf.lect12
+\open isPrime (<)
+\open Nat (mod)
+
+\func \infixl 6 - (n m : Nat) : Nat
+  | 0, m => 0
+  | n, 0 => n
+  | suc n, suc m => n - m
+
+\func pow (a : Nat) (n : Nat) : Nat \elim n
+  | 0 => 1
+  | suc n => pow a n * a
+
+\func Fermat-little-theorem {p a : Nat} (ph : isPrime(p) = true) (ah1 : 0 < a = true) (ah2 : a < p = true) : (a `pow` (p - 1) - 1) mod p = 0 \elim a
+  | 0 => contradiction
+  | 1 => test p
+  | suc a => {?}
+
+\func Fermat-little-theorem-lemma1 (p : Nat) : (pow 0 (p - 1) - 1) mod p = 0 => {?}
+
+\func test (p : Nat) : (pow 1 (p - 1) - 1) mod p = 0 \elim p
+  | 0 => idp
+  | suc p => {?}
+  
+\func kkk {p : Nat} : (pow (suc p) 1) = (suc p)
+  | {0} => idp
+  | {suc p} => {?}
+
+\func zero_mul (n : Nat) : 1 * n = n
+  | 0 => idp
+  | suc n => pmap suc (zero_mul n)
+
+\func heh {a b : \Type} : a = b => path {?}

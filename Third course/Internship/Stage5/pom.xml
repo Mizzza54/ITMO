@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>ru.ifmo</groupId>
+    <artifactId>Stage5</artifactId>
+    <packaging>pom</packaging>
+    <version>1.0.0</version>
+    <modules>
+        <module>ru.ifmo.gerasimov.core</module>
+        <module>ru.ifmo.gerasimov.lenta</module>
+        <module>ru.ifmo.gerasimov.AiF</module>
+        <module>ru.ifmo.gerasimov.command</module>
+        <module>ru.ifmo.gerasimov.ria</module>
+    </modules>
+
+    <properties>
+        <!-- General properties -->
+        <maven.compiler.source>15</maven.compiler.source>
+        <maven.compiler.target>15</maven.compiler.target>
+
+        <!-- OSGi component annotations -->
+        <org.osgi.service.component.annotations-version>1.5.0</org.osgi.service.component.annotations-version>
+
+        <!-- OSGi metatype annotations -->
+        <org.osgi.service.metatype.annotations-version>1.4.1</org.osgi.service.metatype.annotations-version>
+
+        <!-- OSGi ConfigurationAdmin -->
+        <org.osgi.service.cm-version>1.6.1</org.osgi.service.cm-version>
+
+        <!-- Rome -->
+        <rome-version>1.18.0</rome-version>
+
+        <maven-bundle-plugin-version>5.1.4</maven-bundle-plugin-version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <!-- OSGi component annotations -->
+            <dependency>
+                <groupId>org.osgi</groupId>
+                <artifactId>org.osgi.service.component.annotations</artifactId>
+                <version>${org.osgi.service.component.annotations-version}</version>
+                <optional>true</optional>
+            </dependency>
+
+            <!-- OSGi metatype annotations -->
+            <dependency>
+                <groupId>org.osgi</groupId>
+                <artifactId>org.osgi.service.metatype.annotations</artifactId>
+                <version>${org.osgi.service.metatype.annotations-version}</version>
+                <optional>true</optional>
+            </dependency>
+
+            <!-- OSGi ConfigurationAdmin -->
+            <dependency>
+                <groupId>org.osgi</groupId>
+                <artifactId>org.osgi.service.cm</artifactId>
+                <version>${org.osgi.service.cm-version}</version>
+                <optional>true</optional>
+            </dependency>
+
+            <!-- https://mvnrepository.com/artifact/org.apache.felix/org.apache.felix.gogo.runtime -->
+            <dependency>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>org.apache.felix.gogo.runtime</artifactId>
+                <version>1.1.6</version>
+                <optional>true</optional>
+            </dependency>
+
+            <!-- OSGi Logger -->
+            <dependency>
+                <groupId>org.osgi</groupId>
+                <artifactId>org.osgi.service.log</artifactId>
+                <version>1.5.0</version>
+                <optional>true</optional>
+            </dependency>
+
+            <!-- Rome -->
+            <dependency>
+                <groupId>com.rometools</groupId>
+                <artifactId>rome</artifactId>
+                <version>${rome-version}</version>
+                <optional>true</optional>
+            </dependency>
+
+            <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-simple -->
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-simple</artifactId>
+                <version>1.7.36</version>
+                <optional>true</optional>
+            </dependency>
+
+            <!-- https://mvnrepository.com/artifact/com.guicedee.services/jaxen -->
+            <dependency>
+                <groupId>com.guicedee.services</groupId>
+                <artifactId>jaxen</artifactId>
+                <version>62</version>
+                <optional>true</optional>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+</project>

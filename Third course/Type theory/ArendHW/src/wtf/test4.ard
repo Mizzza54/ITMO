@@ -1,0 +1,20 @@
+\import HLevel
+\import Logic
+\import Paths.Meta
+\import Set (Dec)
+\import wtf.lect07
+\import wtf.lect10 (setLem)
+
+\func DecideYes {A : \Prop} (x : Dec A) : \Prop \elim x
+  | Dec.yes a => \Sigma
+  | Dec.no n => Empty
+
+\func Dec-isSet {A : \Type} (dec : \Pi (x y : A) -> Dec (TruncP (x = y))) : isSet A =>
+  setLem (\lam a a' => DecideYes (dec a a')) (\lam x y => Path.inProp) (\lam a =>
+      \case dec a a \as v, idp : dec a a = v \with {
+        | Dec.yes a1, p => rewrite p ()
+        | Dec.no n, p => absurd (n (inP idp))
+      }) (\lam a a' d => \case dec a a' \as v, idp : dec a a' = v \with {
+    | Dec.yes a1, p => a1
+    | Dec.no n, p => \let h => rewrite p d \in absurd h
+  })

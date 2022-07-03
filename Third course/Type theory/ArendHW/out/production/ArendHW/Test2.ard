@@ -1,0 +1,98 @@
+\import Equiv
+\import Function.Meta
+\import HLevel
+\import Logic.Meta
+\import Meta
+\import Paths (*>, inv, pmap, transport)
+\import Paths.Meta
+\import Set \hiding (#)
+
+-- 8. Докажите, что тип с разрешимым равенством являетя множеством.
+
+\func retract-isProp {A B : \Type} (pB : isProp B) (f : A -> B) (g : B -> A)
+                     (h : \Pi (x : A) -> g (f x) = x) : isProp A
+  => \lam x y => inv (h x) *> pmap g (pB _ _) *> h y
+
+\func Unit-isSet : isSet (\Sigma)
+  => \lam a a' => retract-isProp {a = a'} {\Sigma} Unit-isProp
+      (\lam _ => ()) (\lam _ => idp) (\lam q => \case \elim a', \elim q \with {
+        | a', idp => idp
+      })
+
+\data <= (n m : Nat) : \Set0 \with
+  | 0, m => z<=n
+  | suc n, suc m => s<=s (<= n m)
+
+\data <=' (n m : Nat) : \Set0 \elim m
+  | suc m => <=-step (<=' n m)
+  | m => <=-refl (n = m)
+
+-- Одноэлементный тип является утверждением.
+\func Unit-isProp : isProp (\Sigma)
+  => \lam x y => idp
+
+\func Dec-isSet {A : \Type} (dec : \Pi (x y : A) -> Decide (x = y)) : isSet A
+  => \lam a a' => \case (dec a a') \with {
+  | yes a=a' => retract-isProp {a = a'} {() = ()}
+      (Unit-isSet () ())
+      (pmap (\lam _ => ()))
+      (\lam u=u => \case \elim a', \elim a=a' \with {
+        | a', idp => idp -- pmap (\lam _ => a) u=u
+      })
+      (\lam x => {?}
+      --\case \elim a', \elim a=a', \elim x \with {
+      --        a', a=a', idp => run {
+      ----          rewriteI (idp : (path {\lam (_ : I) => \Sigma} {()} {()} (\lam (_ : I) => ())) = (idp)),
+      ----          rewriteI (idp : (pmap (\lam _ => a) (path (\lam _ => ()))) = idp),
+      --          {?}
+      --        }
+      --      }
+      )
+  | no a!=a' => \lam p q => contradiction
+}
+
+--\func Dec-isSet {A : \Type} (dec : \Pi (x y : A) -> Decide (x = y)) : isSet A => \lam a a' p q => \case dec a a' \with {
+--  | yes a=a' => retract-isProp {a = a'} {T (\case (dec a a') \with {
+--    | yes _ => true | no _ => false
+--  })} (\lam x y => T-lem)
+--      (\lam qew => cases ((\case (dec a a') \return Bool \with {
+--        | yes _ => true | no _ => false
+--      }) arg addPath) \with {
+--        | true, _ => ()
+--        | false, pp => cases ((dec a a') arg addPath) \with {
+--          | yes a1, qq => contradiction $ transport (\lam xxx => (\case xxx \return Bool \with {
+--            | yes _ => true | no _ => false
+--          }) = false ) qq pp
+--          | no _x, _ => contradiction
+--        }
+--      })
+--      (\lam aaa => cases ((\case (dec a a') \return Bool \with {
+--        | yes _ => true | no _ => false
+--      }) arg addPath) \with {
+--        | true, pp => \case (dec a a') \with {
+--          | yes a1 => a1
+--          | no _x => contradiction
+--        }
+--        | false, pp => cases ((dec a a') arg addPath) \with {
+--          | yes a1, qq => contradiction $ transport (\lam xxx => (\case xxx \return Bool \with {
+--            | yes _ => true | no _ => false
+--          }) = false ) qq pp
+--          | no _x, _ => contradiction
+--        }
+--      })
+--      (\lam x => \case \elim a', \elim x, \elim p \with {
+--        | a', idp, p' => cases ((dec a a) ) \with {
+--          | yes a1 => {?}
+--          | no _x => contradiction
+--        }
+--      })
+--      p q
+--  | no a!=a => contradiction
+--} \where {
+--  \func decide-to-Bool {A : \Type} (dec : Decide A) : Bool \elim dec
+--    | yes _ => true
+--    | no _ => false
+--}
+
+-- use retract... В T (dec _ _)
+-- почти в конце пары было (2:45-48)

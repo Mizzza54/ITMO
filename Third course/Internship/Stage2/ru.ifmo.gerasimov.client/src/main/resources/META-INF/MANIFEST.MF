@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Greeting Client
+Bundle-SymbolicName: gms_ru.ifmo.gerasimov.client
+Bundle-Version: 1.0.0
+Created-By: Michael Gerasimov
+Bundle-Activator: ru.ifmo.gerasimov.client.Client
+Import-Package: org.osgi.framework,ru.ifmo.gerasimov;version="[1.0.0,2.0.0)"
+Export-Package: ru.ifmo.gerasimov.client;version=1.0.0

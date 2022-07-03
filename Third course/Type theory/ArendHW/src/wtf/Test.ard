@@ -1,0 +1,42 @@
+\import Equiv.Univalence
+\import HLevel
+\import Logic (Empty, TruncP, inP, truncP)
+\import Logic.Meta
+\import Meta
+\import Paths (<*, inv)
+\import Paths.Meta
+\import Set
+--\import wtf.lect07 \hiding (<=-refl, <=-step, baz, isEven)
+\import wtf.lect10 (setLem)
+
+
+\data Unit | unit
+
+-- 8. Докажите, что тип с разрешимым равенством являетя множеством.
+
+\func Dec-isSet {A : \Type} (dec : \Pi (x y : A) -> Dec (TruncP (x = y))) : isSet A =>
+  setLem (\lam x y => T1 (dec x y)) (\lam x y => T1-prop(dec x y)) (\lam a => cases(dec a a) \with {
+    | yes a1 => unit
+    | no n => n (inP idp)
+  }) (\lam x y => cases(dec x y) \with {
+    | yes a => \lam _ => \scase a \with {
+      | inP a1 => a1
+      | truncP a1 a' i => {?}
+    }
+    | no n => contradiction
+  })
+  \where {
+    \func T1 {X : \Prop} (d : Dec X) : \Type \elim d
+      | yes a => Unit
+      | no n => Empty
+
+    \func T1-prop {X : \Prop} (d : Dec X) : isProp(T1 d) \elim d
+      | yes a => Unit'-isProp
+      | no n => Empty-isProp
+  }
+
+
+\func Unit'-isProp (x y : Unit) : x = y \elim x, y
+  | unit, unit => idp
+
+\func Empty-isProp : isProp Empty => \lam a a' => \case a

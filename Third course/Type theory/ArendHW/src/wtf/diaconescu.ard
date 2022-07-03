@@ -1,0 +1,96 @@
+\import Algebra.Domain.Euclidean
+\import Arith.Nat
+\import Data.Bool
+\import Data.Or
+\import Function
+\import Function.Meta ($)
+\import HLevel
+\import Logic
+\import Logic.Meta
+\import Paths
+\import Relation.Equivalence
+\import Set
+
+\class Setoid (S : \Type)
+  | \infix 4 ~ : S -> S -> \Prop
+  | ~-reflexive {x : S} : x ~ x
+  | ~-symmetric {x y : S} : x ~ y -> y ~ x
+  | ~-transitive {x y z : S} : x ~ y -> y ~ z -> x ~ z
+\where {
+  \use \coerce toQuotient (S : Setoid) : \Type => Quotient {S.S} (S.~)
+  \func toQuotionEl {P : Setoid} (x : P.S) : Quotient {P.S} (P.~) => in~ x
+}
+
+
+\func equiv (A B : \Prop) => \Sigma (A -> B) (B -> A)
+
+\func setoidFromEquiv {S : \Set} {P : \Set} (E : P -> S -> \Prop) : Setoid S \cowith
+  | ~ (x y : S) => \Pi (p : P) -> equiv (E p x) (E p y)
+  | ~-reflexive => \lam p => (id, id)
+  | ~-symmetric {x y : S} (x~y : x ~ y) => \lam p => ((x~y p).2, (x~y p).1)
+  | ~-transitive {x y z : S} (x~y : x ~ y) (y~z : y ~ z) => \lam p => ((y~z p).1 o (x~y p).1, (x~y p).2 o (y~z p).2)
+
+\func setoidFromA {I : \Set} {S : \Set} (A : I -> S -> \Prop) => setoidFromEquiv A
+\func setoidFromI {I : \Set} {S : \Set} (A : I -> S -> \Prop) => setoidFromEquiv (\lam x i => A i x)
+
+\func quotFromA {I : \Set} {S : \Set} (A : I -> S -> \Prop) => Setoid.toQuotient (setoidFromA A)
+\func quotFromI {I : \Set} {S : \Set} (A : I -> S -> \Prop) => Setoid.toQuotient (setoidFromI A)
+
+\func recA {I : \Set} {S : \Set} (A : I -> S -> \Prop) (i : I) (s : quotFromA A) : \Prop
+  \elim s
+    | in~ a => A i a
+    | ~-equiv x y r i1 => propExt (r i).1 (r i).2 @ i1
+
+\func recI {I : \Set} {S : \Set} (A : I -> S -> \Prop) (i : quotFromI A) (s : S) : \Prop
+  \elim i
+    | in~ a => A a s
+    | ~-equiv x y r i1 => propExt (r s).1 (r s).2 @ i1
+
+\func recAI {I : \Set} {S : \Set} (A : I -> S -> \Prop) (i : quotFromI A) (x : quotFromA A) : \Prop
+  \elim i, x
+    | in~ i, in~ x => A i x
+    | in~ i, ~-equiv x x' r i1 => propExt (r i).1 (r i).2 @ i1
+    | ~-equiv i i' r i1, in~ x => propExt (r x).1 (r x).2 @ i1
+
+\func recAIin=>recI {I : \Set} {S : \Set} (A : I -> S -> \Prop) (i : quotFromI A) (x : S) (p : recAI A i (in~ x)) : recI A i x \elim i, x
+  | in~ a, x => p
+
+\func notEmpty {I : \Set} {S : \Set} (A : I -> S -> \Prop) (i : quotFromI A) => ∃ (x : quotFromA A) (recAI A i x)
+
+\class LEM
+  | lem (P : \Prop) : Dec P
+
+{- Task 2 -}
+\class SetoidChoice \extends LEM
+  | setoidChoice :
+  \Pi (I : \Set) (S : \Set) (A : I -> S -> \Prop) (not_empty : \Pi (i : quotFromI A) -> notEmpty A i) ->
+      ∃ (f : \Pi (i : quotFromI A) -> S) (\Pi (i : quotFromI A) -> recI A i (f i))
+  | lem (P : \Prop) =>
+    \case setoidChoice Bool Bool (A P) (not_empty P) \with {
+      | inP (f, p) => \case f (in~ false) \as f0, idp : f (in~ false) = f0, f (in~ true) \as f1, idp : f (in~ true) = f1 \with {
+        | false, p0, false, p1 => \case p (in~ true) \with {
+          | byLeft a => contradiction
+          | byRight b => yes b
+        }
+        | false, p0, true, p1 => no (\lam (pyes : P) => true/=false (inv $ inv p0 *> f~false=f~true P f pyes *> p1))
+        | true, p0, false, p1 => no (\lam (pyes : P) => true/=false (inv p0 *> f~false=f~true P f pyes *> p1))
+        | true, p0, true, p1 => \case p (in~ false) \with {
+          | byLeft a => contradiction
+          | byRight b => yes b
+        }
+      }
+    }
+    \where {
+      \func f~false=f~true (P : \Prop) (f : \Pi (i : quotFromI (A P)) -> Bool) (pyes : P) : f (in~ false) = f (in~ true) =>
+        pmap f (path (~-equiv false true (\lam _ => (\lam _ => byRight pyes, \lam _ => byRight pyes) : \Pi (x : Bool) -> equiv (A P false x) (A P true x))))
+
+      \func A (P : \Prop) (i : Bool) (s : Bool) : \Prop \elim i
+       | false => (s = false) || P
+       | true => (s = true) || P
+
+      \func not_empty (P : \Prop) (i : quotFromI (A P)) : notEmpty (A P) i \elim i
+        | in~ a => \case \elim a \with {
+          | false => inP (in~ false, byLeft idp)
+          | true => inP (in~ true, byLeft idp)
+        }
+    }

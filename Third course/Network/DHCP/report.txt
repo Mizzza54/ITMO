@@ -1,0 +1,140 @@
+Задание 1:
+    Запустил следующую команду: "sudo ipconfig set tap0 DHCP"
+
+Задание 2:
+    Запустил следующую команду: "ifconfig tap0"
+    Вывод был следующим:
+
+    --------------------------------------------------------------------------------------------------------------------
+    michael@MacBook-Pro-3 ~ % ifconfig tap0
+    tap0: flags=8943<UP,BROADCAST,RUNNING,PROMISC,SIMPLEX,MULTICAST> mtu 1500
+        ether 96:a4:ad:df:7b:c6
+        inet 10.29.199.21 netmask 0xffffff00 broadcast 10.29.199.255
+        nd6 options=201<PERFORMNUD,DAD>
+        media: autoselect
+        status: active
+        open (pid 3655)
+    --------------------------------------------------------------------------------------------------------------------
+
+    Как видно DHCP выдал мне IPv4 "10.29.199.21" и подсеть "0xffffff00".
+
+
+Задание 3:
+    Данное задание я делал после 4, поэтому команда "sudo ipconfig set tap0 AUTOMATIC-V6" была уже выполнена.
+    Я ввел команду "ifconfig tap0".
+    Вывод был следующим:
+
+    --------------------------------------------------------------------------------------------------------------------
+    michael@MacBook-Pro-3 ~ % ifconfig tap0
+    tap0: flags=8843<UP,BROADCAST,RUNNING,SIMPLEX,MULTICAST> mtu 1500
+    	ether 12:95:0e:62:86:62
+    	inet6 fe80::1857:e5c5:42a5:1756%tap0 prefixlen 64 secured scopeid 0x14
+    	inet6 fdca:3999:aa01:8c57:1cf3:8d07:124c:72b9 prefixlen 64 autoconf secured
+    	inet 10.29.199.21 netmask 0xffffff00 broadcast 10.29.199.255
+    	inet6 fdcd:f896:7ce6:947c::ac6 prefixlen 64 dynamic
+    	nd6 options=201<PERFORMNUD,DAD>
+    	media: autoselect
+    	status: active
+    	open (pid 5458)
+    --------------------------------------------------------------------------------------------------------------------
+
+    Из вывода ясно, что IPv6 адрес выданный SLAAC равен fdca:3999:aa01:8c57:1cf3:8d07:124c:72b9.
+    Мой адрес: fdca:3999:aa01:8c57:1cf3:8d07:124c:72b9
+    Длина префикса: 64
+    Адрес сети: fdca:3999:aa01:8c57::
+
+    Из условия дз: "...отправьте пинг на адрес внутри этой сети, заканчивающийся на :11:59ff:fe85:305a".
+    Значит мне нужно пингануть адрес "fdca:3999:aa01:8c57:11:59ff:fe85:305a"
+    Я ввел команду "ping6 -c 5 fdca:3999:aa01:8c57:11:59ff:fe85:305a"
+    Вывод был следующим:
+
+    --------------------------------------------------------------------------------------------------------------------
+    michael@MacBook-Pro-3 ~ % ping6 -c 5 fdca:3999:aa01:8c57:11:59ff:fe85:305a
+    PING6(56=40+8+8 bytes) fdca:3999:aa01:8c57:1cf3:8d07:124c:72b9 --> fdca:3999:aa01:8c57:11:59ff:fe85:305a
+    16 bytes from fdca:3999:aa01:8c57:11:59ff:fe85:305a, icmp_seq=0 hlim=64 time=68.237 ms
+    16 bytes from fdca:3999:aa01:8c57:11:59ff:fe85:305a, icmp_seq=1 hlim=64 time=33.605 ms
+    16 bytes from fdca:3999:aa01:8c57:11:59ff:fe85:305a, icmp_seq=2 hlim=64 time=46.762 ms
+    16 bytes from fdca:3999:aa01:8c57:11:59ff:fe85:305a, icmp_seq=3 hlim=64 time=33.895 ms
+    16 bytes from fdca:3999:aa01:8c57:11:59ff:fe85:305a, icmp_seq=4 hlim=64 time=41.889 ms
+
+    --- fdca:3999:aa01:8c57:11:59ff:fe85:305a ping6 statistics ---
+    5 packets transmitted, 5 packets received, 0.0% packet loss
+    round-trip min/avg/max/std-dev = 33.605/44.878/68.237/12.695 ms
+    --------------------------------------------------------------------------------------------------------------------
+
+
+Задание 4:
+    Запустил следующую команду: "sudo ipconfig set tap0 AUTOMATIC-V6".
+    Далее ввел команду "ifconfig tap0" чтобы проверить получил ли я IPv6.
+    Вывод был следующим:
+
+    --------------------------------------------------------------------------------------------------------------------
+    michael@MacBook-Pro-3 ~ % ifconfig tap0
+    tap0: flags=8943<UP,BROADCAST,RUNNING,PROMISC,SIMPLEX,MULTICAST> mtu 1500
+        ether 96:a4:ad:df:7b:c6
+        inet 10.29.199.21 netmask 0xffffff00 broadcast 10.29.199.255
+        inet6 fe80::1857:e5c5:42a5:1756%tap0 prefixlen 64 secured scopeid 0x14
+        inet6 fdca:3999:aa01:8c57:1cf3:8d07:124c:72b9 prefixlen 64 autoconf secured
+        inet6 fdcd:f896:7ce6:947c::ac6 prefixlen 64 dynamic
+        nd6 options=201<PERFORMNUD,DAD>
+        media: autoselect
+        status: active
+        open (pid 3655)
+    --------------------------------------------------------------------------------------------------------------------
+
+    Вопрос: почему за получение адреса у DHCP и DHCPv6-серверов баллы есть, а за SLAAC нет?
+    Ответ: При получении ip через SLAAC никто не знает нашего ip. Иначе говоря для SLAAC не фиксируется состояние.
+
+
+Задание 5:
+    Из прошлого вывода нам известен IPv6 адрес и длина префикса, значит можно найти адрес сети.
+    Мой адрес: fdcd:f896:7ce6:947c::ac6
+    Длина префикса: 64
+    Адрес сети: fdcd:f896:7ce6:947c::
+
+    Из условия дз: "В сети, которую вам выдал DHCPv6-сервер, есть DNS-сервер. Его адрес заканчивается на ::35".
+    Значит адрес DNS-сервер будет таким: fdcd:f896:7ce6:947c::35
+
+    Из условия дз: "Этот сервер знает IP-адрес сайта ymfs4329m430jfeo30r6ohq4.localnetwork".
+    Далее ввел команду "dig +tcp @fdcd:f896:7ce6:947c::35 ymfs4329m430jfeo30r6ohq4.localnetwork AAAA".
+    Вывод был следующим:
+
+    --------------------------------------------------------------------------------------------------------------------
+    michael@MacBook-Pro-3 ~ % dig +tcp @fdcd:f896:7ce6:947c::35 ymfs4329m430jfeo30r6ohq4.localnetwork AAAA
+
+    ; <<>> DiG 9.10.6 <<>> +tcp @fdcd:f896:7ce6:947c::35 ymfs4329m430jfeo30r6ohq4.localnetwork AAAA
+    ; (1 server found)
+    ;; global options: +cmd
+    ;; Got answer:
+    ;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 44135
+    ;; flags: qr aa rd; QUERY: 1, ANSWER: 1, AUTHORITY: 1, ADDITIONAL: 2
+    ;; WARNING: recursion requested but not available
+
+    ;; OPT PSEUDOSECTION:
+    ; EDNS: version: 0, flags:; udp: 1232
+    ;; QUESTION SECTION:
+    ;ymfs4329m430jfeo30r6ohq4.localnetwork. IN AAAA
+
+    ;; ANSWER SECTION:
+    ymfs4329m430jfeo30r6ohq4.localnetwork. 600 IN AAAA fdca:3999:aa01:8c57:91:46ff:fe9b:1380
+
+    ;; AUTHORITY SECTION:
+    ymfs4329m430jfeo30r6ohq4.localnetwork. 600 IN NS ns.ymfs4329m430jfeo30r6ohq4.localnetwork.
+
+    ;; ADDITIONAL SECTION:
+    ns.ymfs4329m430jfeo30r6ohq4.localnetwork. 600 IN AAAA fdcd:f896:7ce6:947c::35
+
+    ;; Query time: 158 msec
+    ;; SERVER: fdcd:f896:7ce6:947c::35#53(fdcd:f896:7ce6:947c::35)
+    ;; WHEN: Sun May 22 20:01:58 MSK 2022
+    ;; MSG SIZE  rcvd: 139
+    --------------------------------------------------------------------------------------------------------------------
+
+    В "ANSWER SECTION" видим чему равен IPv6 сайта "ymfs4329m430jfeo30r6ohq4.localnetwork".
+    Ответ: "fdca:3999:aa01:8c57:91:46ff:fe9b:1380".
+
+
+Задание 6:
+    Пользуясь браузером Google Chrome версии 101.0.4951.64 (Официальная сборка), (x86_64),
+    Я ввел в адресную строку следующий адрес: "http://[fdca:3999:aa01:8c57:91:46ff:fe9b:1380]:9229/".
+    После перехода на сайт нажал на кнопку "Click me"

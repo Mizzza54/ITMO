@@ -1,0 +1,143 @@
+\import Algebra.Monoid
+\import Equiv.Univalence
+\import HLevel
+\import Logic
+\import Order.Lattice
+\import Order.PartialOrder
+\import Paths.Meta
+\import Set
+\import hw1 (inv, pmap)
+\open MeetSemilattice (meet-comm, meet-idemp, meet-monotone)
+\open Lattice (ldistr<=)
+\open ImplicativeLattice (exist-top)
+
+-------------------------------------------------
+-- Proof task #1
+-------------------------------------------------
+
+\class ImplicativeLattice \extends Bounded.Lattice {
+  | relativePseudoComplement \alias \infixr 7 |--∘ : E -> E -> E
+  | ax1 {x y : E} : x ∧ (x |--∘ y) <= y
+  | ax2 {x y z : E} : x ∧ z <= y -> z <= (x |--∘ y)
+
+  \lemma exist-top {x : E} : x |--∘ x = Bounded.top => <=-antisymmetric Bounded.top-univ (ax2 meet-left)
+
+  \lemma ldistr>= {x y z : E} : x ∧ (y ∨ z) <= (x ∧ y) ∨ (x ∧ z) => step8-ldistr>=
+
+  \lemma step1-ldistr>= {x y z : E} : x ∧ y <= (x ∧ y) ∨ (x ∧ z) => join-left
+  \lemma step2-ldistr>= {x y z : E} : x ∧ z <= (x ∧ y) ∨ (x ∧ z) => join-right
+  \lemma step3-ldistr>= {x y z : E} : y <= x |--∘ ((x ∧ y) ∨ (x ∧ z)) => ax2 step1-ldistr>=
+  \lemma step4-ldistr>= {x y z : E} : z <= x |--∘ ((x ∧ y) ∨ (x ∧ z)) => ax2 step2-ldistr>=
+  \lemma step5-ldistr>= {x y z : E} : y ∨ z <= x |--∘ ((x ∧ y) ∨ (x ∧ z)) => join-univ step3-ldistr>= step4-ldistr>=
+  \lemma step6-ldistr>= {x y z : E} : x ∧ (y ∨ z) <= x ∧ (x |--∘ ((x ∧ y) ∨ (x ∧ z))) => meet-monotone <=-reflexive step5-ldistr>=
+  \lemma step7-ldistr>= {x y z : E} : x ∧ (x |--∘ ((x ∧ y) ∨ (x ∧ z))) <= (x ∧ y) ∨ (x ∧ z) => ax1
+  \lemma step8-ldistr>= {x y z : E} : x ∧ (y ∨ z) <= (x ∧ y) ∨ (x ∧ z) => <=-transitive step6-ldistr>= step7-ldistr>=
+
+  \lemma ldistr {x y z : E} : x ∧ (y ∨ z) = (x ∧ y) ∨ (x ∧ z)
+    => <=-antisymmetric ldistr>= ldistr<=
+
+} \where {
+  \func RelativePseudoComplement {E : Lattice} (x y : E) =>
+    \Sigma (j : E) (x ∧ j <= y) (\Pi (z : E) -> z <= j)
+}
+
+\class HeytingAlgebra \extends ImplicativeLattice {
+  | pseudoComplement \alias \infix 9 ! : E -> E
+  | ax3 {x : E} : ! x = x |--∘ Bounded.bottom
+  | ax4 {x : E} : x ∧ (! x) = Bounded.bottom
+  | ax5 {x y : E} : x ∧ (x |--∘ y) = x ∧ y
+  | ax6 {x y : E} : y ∧ (x |--∘ y) = y
+  | ax7 {x y z : E} : x |--∘ (y ∧ z) = (x |--∘ y) ∧ (x |--∘ z)
+
+  \lemma NegationIntroduction {x y : E} : ((x |--∘ y) |--∘ (x |--∘ (! y)) |--∘ (! x)) = Bounded.top => {?}
+
+  \lemma step1 {x y : E} :
+    (x |--∘ (! y)) |--∘ (! x)
+      =
+    (x |--∘ (! y)) |--∘ (x |--∘ Bounded.bottom)
+    => pmap (\lam i => (x |--∘ (! y)) |--∘ i) ax3
+
+  \lemma step2 {x y : E} :
+    (x |--∘ (! y)) |--∘ (x |--∘ Bounded.bottom)
+      =
+    (x |--∘ (! y)) |--∘ (x |--∘ (y ∧ (! y)))
+    => pmap (\lam i => (x |--∘ (! y)) |--∘ (x |--∘ i)) (inv ax4)
+
+  \lemma step3 {x y : E} :
+    (x |--∘ (! y)) |--∘ (x |--∘ (y ∧ (! y)))
+      =
+    (x |--∘ (! y)) |--∘ ( (x |--∘ y) ∧ (x |--∘ (! y) ))
+    => pmap (\lam i => (x |--∘ (! y)) |--∘ i) ax7
+
+  \lemma step4 {x y : E} :
+    (x |--∘ (! y)) |--∘ ( (x |--∘ y) ∧ (x |--∘ (! y)) )
+      =
+    ( (x |--∘ (! y)) |--∘ (x |--∘ y) ) ∧ ( (x |--∘ (! y)) |--∘ (x |--∘ (! y)) )
+    => pmap (\lam i => i) ax7
+
+  \lemma step5 {x y : E} :
+    ( (x |--∘ (! y)) |--∘ (x |--∘ y) ) ∧ ( (x |--∘ (! y)) |--∘ (x |--∘ (! y)) )
+      =
+    ( (x |--∘ (! y)) |--∘ (x |--∘ y) ) ∧ Bounded.top
+    => pmap (\lam i => ( (x |--∘ (! y)) |--∘ (x |--∘ y) ) ∧ i) exist-top
+
+  \lemma step6 {x y : E} :
+    ((x |--∘ (! y)) |--∘ (x |--∘ y)) ∧ Bounded.top
+      =
+    Bounded.top ∧ ((x |--∘ (! y)) |--∘ (x |--∘ y))
+    => meet-comm
+
+  \lemma step7 {x y : E} :
+    Bounded.top ∧ ((x |--∘ (! y)) |--∘ (x |--∘ y))
+      =
+    ((x |--∘ (! y)) |--∘ (x |--∘ y))
+    => <=-antisymmetric meet-right (meet-univ Bounded.top-univ <=-reflexive)
+
+  \lemma step8 {x y : E} :
+    (x |--∘ (! y)) |--∘ (x |--∘ y)
+      =
+    (x |--∘ (y |--∘ Bounded.bottom)) |--∘ (x |--∘ y)
+    => pmap (\lam i => (x |--∘ i) |--∘ (x |--∘ y)) ax3
+
+  \lemma step9 {x y : E} :
+    (x |--∘ (y |--∘ Bounded.bottom)) |--∘ (x |--∘ y)
+      =
+    (x |--∘ (y |--∘ (x ∧ (! x)))) |--∘ (x |--∘ y)
+    => pmap (\lam i => (x |--∘ (y |--∘ i)) |--∘ (x |--∘ y)) (inv ax4)
+
+  \lemma step10 {x y : E} :
+    (x |--∘ (y |--∘ (x ∧ (! x)))) |--∘ (x |--∘ y)
+      =
+    (x |--∘ ((y |--∘ x) ∧ (y |--∘ (! x)))) |--∘ (x |--∘ y)
+    => pmap (\lam i => (x |--∘ i) |--∘ (x |--∘ y)) ax7
+
+  \lemma step11 {x y : E} :
+    (x |--∘ ((y |--∘ x) ∧ (y |--∘ (! x)))) |--∘ (x |--∘ y)
+      =
+    ((x |--∘ (y |--∘ x)) ∧ (x |--∘ (y |--∘ (! x)))) |--∘ (x |--∘ y)
+    => pmap (\lam i => i |--∘ (x |--∘ y)) ax7
+
+  \lemma step12 {x y : E} :
+    x |--∘ (y |--∘ x)
+      =
+    Bounded.top
+    => path (\lam i => {?})
+
+  \lemma step13 {x y : E} :
+    ((x |--∘ (y |--∘ x)) ∧ (x |--∘ (y |--∘ (! x)))) |--∘ (x |--∘ y)
+      =
+    (Bounded.top ∧ (x |--∘ (y |--∘ (! x)))) |--∘ (x |--∘ y)
+    => pmap (\lam i => (i ∧ (x |--∘ (y |--∘ (! x)))) |--∘ (x |--∘ y)) step12
+
+  \lemma step14 {x y : E} :
+    (Bounded.top ∧ (x |--∘ (y |--∘ (! x)))) |--∘ (x |--∘ y)
+      =
+    (x |--∘ (y |--∘ (! x))) |--∘ (x |--∘ y)
+    => pmap (\lam i => i |--∘ (x |--∘ y)) (<=-antisymmetric meet-right (meet-univ Bounded.top-univ <=-reflexive))
+
+  \lemma step15 {x y : E} :
+    (x |--∘ (y |--∘ (! x))) |--∘ (x |--∘ y)
+      =
+    (x |--∘ (y |--∘ (! x))) |--∘ (x |--∘ y)
+    => {?}
+}

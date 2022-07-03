@@ -1,0 +1,14 @@
+\import HLevel
+\import Set
+
+\data <= (n m : Nat) : \Set0 \with
+  | 0, m => z<=n
+  | suc n, suc m => s<=s (<= n m)
+
+\data <=' (n m : Nat) : \Set0 \elim m
+  | suc m => <=-step (<=' n m)
+  | m => <=-refl (n = m)
+
+
+\func Dec-isSet {A : \Type} (dec : \Pi (x y : A) -> Decide (x = y)) : isSet A
+  => {?}

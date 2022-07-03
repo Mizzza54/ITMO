@@ -1,0 +1,55 @@
+\import Data.Or
+\import Equiv
+\import Equiv.Path
+\import Equiv.Univalence
+\import HLevel
+\import Logic
+\import Paths
+\import Paths.Meta
+\import Set
+\import Set.Hedberg
+\open Set.Hedberg.Hedberg (propPathEquiv)
+
+-------------------------------------------------
+-- Proof task #2
+-------------------------------------------------
+
+\func prop-isSet : isSet \Prop => \lam x y => rewrite (QEquiv-to-= (univalence {x} {y})) Path.inProp
+
+\lemma Hedberg {A : \Type} (d : \Pi (a a' : A) -> (a = a') `Or` (a /= a')) : isSet A => \lam x x' =>
+    \let | R {a a' : A} (p : (a = a') `Or` (a /= a')) : \Prop => \case p \with
+         {
+           | inl _ => \Sigma
+           | inr _ => Empty
+         }
+         | R' (a a' : A) => R (d a a')
+         | refl {a : A} (p : (a = a) `Or` (a /= a)) => \case \elim p \return R p \with { | inl _ => () | inr q => q idp }
+         | equiv : Equiv {x = x'} {R' x x'} => propPathEquiv R' (\lam a => refl (d a a)) (\lam {a} {a'} s => \case d a a' \as p, s : R p \with {
+           | inl p, _ => p
+           | inr _, s' => absurd s'
+         }) {x} {x'}
+    \in transport isProp (inv (Equiv-to-= equiv)) Path.inProp
+  \where
+    \func propPathEquiv {A : \Type} (R : A -> A -> \Prop) (refl : \Pi (a : A) -> R a a) (p : \Pi {a a' : A} -> R a a' -> a = a') {a a' : A} : QEquiv {a = a'} {R a a'}
+      => pathEquiv R (\lam {a} {a'} => \new Retraction (transport (R a) __ (refl a)) p (\lam _ => Path.inProp _ _))
+
+\lemma DecSet-isSet {A : \Set} {D : DecSet A} : isSet D => \lam x x' =>
+    \let
+    | R {a b : A} (p : Dec (a = b)) : \Prop => \case p \with
+    {
+      | yes y => \Sigma
+      | no n => Empty
+    }
+
+    | R' (a b : A) => R (D.decideEq a b)
+         | refl {a : A} (p : Dec (a = a)) => \case \elim p \return R p \with { | yes _ => () | no q => q idp }
+         | equiv : Equiv {x = x'} {R' x x'} => propPathEquiv R' (\lam a => refl (D.decideEq a a)) (\lam {a} {a'} s => \case D.decideEq a a' \as p, s : R p \with {
+           | yes p, _ => p
+           | no _, s' => absurd s'
+         }) {x} {x'}
+    \in transport isProp (inv (Equiv-to-= equiv)) Path.inProp
+  \where
+    \func propPathEquiv {A : \Type} (R : A -> A -> \Prop) (refl : \Pi (a : A) -> R a a) (p : \Pi {a a' : A} -> R a a' -> a = a') {a a' : A} : QEquiv {a = a'} {R a a'}
+      => pathEquiv R (\lam {a} {a'} => \new Retraction (transport (R a) __ (refl a)) p (\lam _ => Path.inProp _ _))
+
+

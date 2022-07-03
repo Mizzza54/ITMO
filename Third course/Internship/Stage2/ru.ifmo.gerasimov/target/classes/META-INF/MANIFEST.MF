@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Bnd-LastModified: 1646382347277
+Build-Jdk-Spec: 11
+Bundle-Activator: ru.ifmo.gerasimov.impl.Activator
+Bundle-ManifestVersion: 2
+Bundle-Name: Greeting API
+Bundle-SymbolicName: gms_ru.ifmo.gerasimov
+Bundle-Version: 1.0.0
+Created-By: Apache Maven Bundle Plugin 5.1.4
+Export-Package: ru.ifmo.gerasimov;version="1.0.0"
+Import-Package: org.osgi.framework;version="[1.10,2)"
+Originally-Created-By: Michael Gerasimov
+Require-Capability: osgi.ee;filter:="(&(osgi.ee=JavaSE)(version=11))"
+Tool: Bnd-5.1.1.202006162103

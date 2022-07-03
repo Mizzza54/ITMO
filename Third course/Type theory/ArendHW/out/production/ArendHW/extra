@@ -1,0 +1,59 @@
+\lemma step2 {x y : E} :
+    (x |--∘ (! y)) |--∘ (x |--∘ Bounded.bottom)
+      =
+    (x |--∘ (y |--∘ Bounded.bottom)) |--∘ (x |--∘ Bounded.bottom)
+    => pmap (\lam i => (x |--∘ i) |--∘ (x |--∘ Bounded.bottom)) ax3
+
+  \lemma step3 {x y : E} :
+    (x |--∘ (y |--∘ Bounded.bottom)) |--∘ (x |--∘ Bounded.bottom)
+      =
+    (x |--∘ (y |--∘ Bounded.bottom)) |--∘ (x |--∘ (x ∧ (! x)))
+    => pmap (\lam i => (x |--∘ (y |--∘ Bounded.bottom)) |--∘ (x |--∘ i) ) (inv ax4)
+
+  \lemma step4 {x y : E} :
+    (x |--∘ (y |--∘ Bounded.bottom)) |--∘ (x |--∘ (x ∧ (! x)))
+      =
+    (x |--∘ (y |--∘ (y ∧ (! y)))) |--∘ (x |--∘ (x ∧ (! x)))
+    => pmap (\lam i => (x |--∘ (y |--∘ i)) |--∘ (x |--∘ (x ∧ (! x)))) (inv ax4)
+
+  \lemma step5 {x y : E} :
+    (x |--∘ (y |--∘ (y ∧ (! y)))) |--∘ (x |--∘ (x ∧ (! x)))
+      =
+    (x |--∘ (y |--∘ (y ∧ (! y)))) |--∘ ((x |--∘ x) ∧ (x |--∘ (! x)))
+    => pmap (\lam i => (x |--∘ (y |--∘ (y ∧ (! y)))) |--∘ i) ax7
+
+  \lemma step6 {x y : E} :
+    (x |--∘ (y |--∘ (y ∧ (! y)))) |--∘ ((x |--∘ x) ∧ (x |--∘ (! x)))
+      =
+    (x |--∘ ((y |--∘ y) ∧ (y |--∘ (! y)))) |--∘ ((x |--∘ x) ∧ (x |--∘ (! x)))
+    => pmap (\lam i => (x |--∘ i) |--∘ ((x |--∘ x) ∧ (x |--∘ (! x)))) ax7
+
+  \lemma step7 {x y : E} :
+    (x |--∘ ((y |--∘ y) ∧ (y |--∘ (! y)))) |--∘ ((x |--∘ x) ∧ (x |--∘ (! x)))
+      =
+    (x |--∘ ((y |--∘ y) ∧ (y |--∘ (! y)))) |--∘ (Bounded.top ∧ (x |--∘ (! x)))
+    => pmap (\lam i => (x |--∘ ((y |--∘ y) ∧ (y |--∘ (! y)))) |--∘ (i ∧ (x |--∘ (! x)))) exist-top
+
+  \lemma step8 {x y : E} :
+    (x |--∘ ((y |--∘ y) ∧ (y |--∘ (! y)))) |--∘ (Bounded.top ∧ (x |--∘ (! x)))
+      =
+    (x |--∘ (Bounded.top ∧ (y |--∘ (! y)))) |--∘ (Bounded.top ∧ (x |--∘ (! x)))
+    => pmap (\lam i => (x |--∘ (i ∧ (y |--∘ (! y)))) |--∘ (Bounded.top ∧ (x |--∘ (! x)))) exist-top
+
+  \lemma step9 {x : E} :
+    (Bounded.top ∧ (x |--∘ (! x)))
+      =
+    (x |--∘ (! x))
+    => <=-antisymmetric meet-right (meet-univ Bounded.top-univ <=-reflexive)
+
+  \lemma step10 {x y : E} :
+    (x |--∘ (Bounded.top ∧ (y |--∘ (! y)))) |--∘ (Bounded.top ∧ (x |--∘ (! x)))
+      =
+    (x |--∘ ((y |--∘ (! y)))) |--∘ (Bounded.top ∧ (x |--∘ (! x)))
+    => pmap (\lam i => (x |--∘ i) |--∘ (Bounded.top ∧ (x |--∘ (! x)))) step9
+
+  \lemma step11 {x y : E} :
+    (x |--∘ ((y |--∘ (! y)))) |--∘ (Bounded.top ∧ (x |--∘ (! x)))
+      =
+    (x |--∘ (y |--∘ (! y))) |--∘ (x |--∘ (! x))
+    => pmap (\lam i => (x |--∘ (y |--∘ (! y))) |--∘ i) step9

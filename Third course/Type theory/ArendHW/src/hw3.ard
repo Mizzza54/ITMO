@@ -1,0 +1,61 @@
+\import Data.Or
+\import Equiv
+\import Equiv.HalfAdjoint
+\import Equiv.Path
+\import Equiv.Univalence
+\import HLevel
+\import Logic
+\import Logic.Meta
+\import Meta
+\import Paths
+\import Paths.Meta
+\import Set
+\import Set.Hedberg
+\open Set.Hedberg.Hedberg (propPathEquiv)
+\open TruncP (remove)
+
+-------------------------------------------------
+-- Proof task #2
+-------------------------------------------------
+
+\func prop-isSet : isSet \Prop => \lam x y => rewrite (QEquiv-to-= (univalence {x} {y})) Path.inProp
+
+\lemma Dec-isSet {A : \Type} (prop : \Pi (x y : A) -> TruncP (x = y) -> (x = y)) (dec : \Pi (x y : A) -> Dec (TruncP (x = y))) : isSet A => \lam x x' =>
+    \let
+    | R {a b : A} (p : Dec (TruncP (a = b))) : \Prop
+    => \case p \with {
+      | yes y => TruncP (a = b)
+      | no n => Empty
+    }
+
+    | R' (a b : A) => R (dec a b)
+
+    | refl {a : A} (p : Dec (TruncP (a = a)))
+    => \case \elim p \return R p \with {
+        | yes y => y
+        | no n => n (inP idp)
+    }
+
+    | equiv : Equiv {x = x'} {R' x x'}
+    => propPathEquiv R' (\lam a => refl (dec a a)) (\lam {a} {a'} s => \case dec a a' \as p, s : R p \with {
+        | yes p, k => TruncP.remove TruncP.levelProp p
+
+--          TruncP.levelProp p k
+
+        --        \Pi (x y : A) -> isProp (x = y)
+--        TruncP.remove (prop a a') p
+--        TruncP.remove (equality-isProp (Dec-isSet prop dec) a a') p
+        | no _, s' => absurd s'
+    }) {x} {x'}
+
+    \in transport isProp (inv (Equiv-to-= equiv)) Path.inProp
+  \where
+    \func propPathEquiv {A : \Type} (R : A -> A -> \Prop) (refl : \Pi (a : A) -> R a a) (p : \Pi {a a' : A} -> R a a' -> a = a') {a a' : A} : QEquiv {a = a'} {R a a'}
+      => pathEquiv R (\lam {a} {a'} => \new Retraction {
+        | f x => transport (R a) x (refl a)             -- (a = a') ->  R a a'
+        | sec => p                                      --  R a a'  -> (a = a')
+        | f_sec => \lam _ => Path.inProp _ _
+    })
+    \func equality-isProp {A : \Type} (p : isSet A) (a a' : A) : isProp (a = a') => p a a'
+
+\func Prop2 => \Sigma (A : \Type) (isProp A)

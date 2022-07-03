@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Greeting API
+Bundle-SymbolicName: gms_ru.ifmo.gerasimov
+Bundle-Version: 1.0.0
+Created-By: Michael Gerasimov
+Bundle-Activator: ru.ifmo.gerasimov.impl.Activator
+Import-Package: org.osgi.framework
+Export-Package: ru.ifmo.gerasimov;version=1.0.0
